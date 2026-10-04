@@ -20,7 +20,7 @@ clues and a warmer/colder signal on the map, then catch them with a Big Red ball
 | 001 | Scryvern | Palantir | Malott Hall | Rare |
 | 002 | Boostling | SpaceX | Engineering Quad | Rare |
 | 003 | Pitchling | Cornell Entrepreneurship Club | eHub Collegetown | Common |
-| 004 | Monolurk | Anthropic | McGraw Tower | Ultra rare |
+| 004 | Kiln | Anthropic | McGraw Tower | Ultra rare |
 | 005 | Vaultling | Capital One | Day Hall | Common |
 | 006 | Chilibao | Asian Chili Spot | Dryden Road | Common |
 

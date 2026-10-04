@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { CREATURES, ENFORCE_HOURS, isActive, type Creature } from './data/creatures'
 import { distanceMeters, useCaught, usePosition, useVisitLog, type LatLng } from './game'
 import { CatchScreen } from './CatchScreen'
 import { Dex } from './Dex'
+import { EncounterAlert } from './EncounterAlert'
 import { MapScreen } from './MapScreen'
 import { useClock, type Theme } from './theme'
 
@@ -52,6 +53,28 @@ export default function App() {
   const inHabitat = withDistance.find(({ c, d }) => !caught[c.id] && d <= c.habitat)?.c
   useVisitLog(withDistance.find(({ c, d }) => d <= c.habitat)?.c.id, pos, accuracy)
 
+  // Reaching a catch ring pops the alert once; "Not now" or running away mutes it until you leave the ring.
+  const [alertFor, setAlertFor] = useState<Creature | null>(null)
+  const muted = useRef(new Set<string>())
+  useEffect(() => {
+    if (!inRange) {
+      muted.current.clear()
+      setAlertFor(null)
+      return
+    }
+    if (!encounter && !muted.current.has(inRange.id)) setAlertFor(inRange)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inRange?.id])
+  const startEncounter = (c: Creature) => {
+    muted.current.add(c.id)
+    setAlertFor(null)
+    setEncounter(c)
+  }
+  const distanceTo = (c: Creature) => {
+    const d = withDistance.find((w) => w.c.id === c.id)?.d
+    return d != null && Number.isFinite(d) ? d : null
+  }
+
   return (
     <div className={`app theme-${theme}`}>
       {tab === 'map' ? (
@@ -70,7 +93,7 @@ export default function App() {
           inRange={inRange}
           inHabitat={inHabitat}
           onSelect={setTargetId}
-          onEncounter={setEncounter}
+          onEncounter={startEncounter}
           onDemoMove={setManualPos}
         />
       ) : (
@@ -79,9 +102,24 @@ export default function App() {
 
       <Tabs theme={theme} tab={tab} onTab={setTab} />
 
+      {alertFor && !encounter && (
+        <EncounterAlert
+          creature={alertFor}
+          theme={theme}
+          distance={distanceTo(alertFor)}
+          onGo={() => startEncounter(alertFor)}
+          onDismiss={() => {
+            muted.current.add(alertFor.id)
+            setAlertFor(null)
+          }}
+        />
+      )}
+
       {encounter && (
         <CatchScreen
           creature={encounter}
+          theme={theme}
+          distance={distanceTo(encounter)}
           onCaught={() => {
             add(encounter.id, { pos, accuracy })
             setJustCaught(encounter.id)

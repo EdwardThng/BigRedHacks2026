@@ -114,21 +114,29 @@ const DRAWINGS: Record<string, Draw> = {
     </g>
   ),
 
-  // Anthropic-inspired: a square, glowing, slightly menacing block in clay.
-  monolurk: (f, p) => (
+  // Anthropic-inspired: Kiln, curled up asleep on its cushion. Only the third eye stays open.
+  kiln: (f, p) => (
     <g>
-      <rect x="38" y="40" width="132" height="138" rx="20" fill={f(p.body)} opacity="0.16" />
-      <path d="M58 66 L76 44 L170 44 L152 66Z" fill={f(p.belly)} />
-      <path d="M152 66 L170 44 L170 142 L152 168Z" fill={f('#b85c3e')} />
-      <rect x="48" y="66" width="104" height="104" rx="8" fill={f(p.body)} />
-      <rect x="68" y="98" width="20" height="15" fill={f('#fff3e6')} />
-      <rect x="112" y="98" width="20" height="15" fill={f('#fff3e6')} />
-      <path d="M64 90 L92 97" stroke={f(p.accent)} strokeWidth="5" strokeLinecap="round" />
-      <path d="M136 90 L108 97" stroke={f(p.accent)} strokeWidth="5" strokeLinecap="round" />
-      <rect x="70" y="128" width="60" height="20" rx="3" fill={f(p.accent)} />
-      <path d="M74 128 L80 137 L86 128Z M90 128 L96 137 L102 128Z M106 128 L112 137 L118 128Z M120 128 L125 135 L128 128Z" fill={f('#fff3e6')} />
-      <rect x="60" y="168" width="24" height="10" rx="2" fill={f('#b85c3e')} />
-      <rect x="116" y="168" width="24" height="10" rx="2" fill={f('#b85c3e')} />
+      <ellipse cx="100" cy="176" rx="90" ry="13" fill={f('#151519')} />
+      <ellipse cx="100" cy="170" rx="82" ry="10" fill={f('#2a2a30')} />
+      <path d="M58 168 C100 178 150 174 162 160 C170 150 168 136 160 130" stroke={f(p.accent)} strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M112 116 C120 100 150 100 166 116 L158 122 L152 114 L146 124 L140 114 L134 124 L128 114 L122 124 L116 116Z" fill={f(p.accent)} />
+      <path d="M48 118 L22 104 L46 132Z" fill={f(p.body)} />
+      <path d="M116 102 L130 90 L126 110Z" fill={f(p.body)} />
+      <path d="M40 132 C40 102 64 88 94 88 C136 88 166 102 168 132 C170 158 148 168 104 168 C62 168 40 158 40 132Z" fill={f(p.body)} />
+      <circle cx="62" cy="166" r="7" fill={f(p.body)} />
+      <circle cx="78" cy="168" r="7" fill={f(p.body)} />
+      <circle cx="96" cy="168" r="7" fill={f(p.body)} />
+      <path d="M72 96 C68 74 82 58 98 54 C88 68 84 80 86 96Z" fill={f(p.accent)} />
+      <path d="M92 92 C100 76 118 66 136 68 C122 76 112 84 106 96Z" fill={f(p.accent)} />
+      <ellipse cx="82" cy="110" rx="6" ry="9.5" fill={f(p.accent)} />
+      <circle cx="80.5" cy="106" r="2.2" fill={f('#ffffff')} />
+      <path d="M56 130 Q64 136 72 130" stroke={f(p.accent)} strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M88 130 Q96 136 104 130" stroke={f(p.accent)} strokeWidth="3" fill="none" strokeLinecap="round" />
+      <ellipse cx="58" cy="142" rx="7" ry="4" fill={f('#f2b4a8')} />
+      <ellipse cx="104" cy="142" rx="7" ry="4" fill={f('#f2b4a8')} />
+      <path d="M74 148 Q80 152 86 148" stroke={f(p.accent)} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      <path d="M81 149.5 L83 156 L85 149.5Z" fill={f('#ffffff')} stroke={f(p.accent)} strokeWidth="0.8" />
     </g>
   ),
 

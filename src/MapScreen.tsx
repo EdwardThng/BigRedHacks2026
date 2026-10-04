@@ -157,7 +157,7 @@ function JournalZone({ creature: c, caught, active, selected, inside, onSelect }
         center={[c.lat, c.lng]}
         radius={c.habitat}
         pathOptions={{ stroke: false, fillColor: c.palette.body === '#e9edf2' ? '#8aa0b8' : c.palette.body, fillOpacity: active || caught ? (inside ? 0.38 : 0.24) : 0.1, className: 'jz-wash' }}
-        eventHandlers={{ click: onSelect }}
+        interactive={false}
       />
       {selected && !caught && <Circle center={[c.lat, c.lng]} radius={c.radius} pathOptions={{ color: ink, weight: 1.5, dashArray: '4 6', fill: false }} interactive={false} />}
       <Marker position={[c.lat, c.lng]} icon={icon} eventHandlers={{ click: onSelect }} zIndexOffset={selected ? 500 : 0} />
