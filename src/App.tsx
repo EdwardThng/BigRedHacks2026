@@ -74,7 +74,7 @@ export default function App() {
           onDemoMove={setManualPos}
         />
       ) : (
-        <Dex caught={caught} highlight={justCaught} onReset={reset} />
+        <Dex theme={theme} caught={caught} active={active} highlight={justCaught} onReset={reset} />
       )}
 
       <Tabs theme={theme} tab={tab} onTab={setTab} />

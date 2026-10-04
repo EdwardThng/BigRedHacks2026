@@ -1,65 +1,120 @@
 import { useState } from 'react'
 import { CreatureArt } from './CreatureArt'
-import { CREATURES, type Creature } from './data/creatures'
+import { CREATURES, RARITY_LABEL, type Creature } from './data/creatures'
+import type { Theme } from './theme'
 
-type Props = { caught: Record<string, string>; highlight?: string | null; onReset: () => void }
+type Props = {
+  theme: Theme
+  caught: Record<string, string>
+  active: Record<string, boolean>
+  highlight?: string | null
+  onReset: () => void
+}
 
-export function Dex({ caught, highlight, onReset }: Props) {
+const num = (c: Creature) => String(c.number).padStart(3, '0')
+const timeOf = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+const dateOf = (iso: string) => new Date(iso).toLocaleDateString([], { month: 'short', day: 'numeric' })
+
+/** Day: a field journal of taped specimen cards. Night: a dark signal log. Same data, two looks. */
+export function Dex({ theme, caught, active, highlight, onReset }: Props) {
   const [open, setOpen] = useState<Creature | null>(null)
   const count = CREATURES.filter((c) => caught[c.id]).length
+  const night = theme === 'night'
 
   return (
-    <div className="dex">
-      <header className="dex-header">
-        <h1>Big Red Dex</h1>
-        <div className="progress">
-          <div className="progress-bar" style={{ width: `${(count / CREATURES.length) * 100}%` }} />
+    <div className={`journal ${theme}`}>
+      <header className="journal-head">
+        <div className="journal-row">
+          {night ? <span className="journal-title">SIGNAL LOG</span> : <h1 className="journal-title">Field Journal</h1>}
+          <span className="journal-count">{night ? `${count}/${CREATURES.length} LOGGED` : `${count} of ${CREATURES.length} logged`}</span>
         </div>
-        <p className="muted">
-          {count} of {CREATURES.length} discovered
-        </p>
+        {night ? (
+          <div className="slog-meter">
+            {CREATURES.map((c) => (
+              <span key={c.id} className={caught[c.id] ? 'on' : ''} />
+            ))}
+          </div>
+        ) : (
+          <div className="journal-meter">
+            <div style={{ width: `${(count / CREATURES.length) * 100}%` }} />
+          </div>
+        )}
       </header>
 
-      <div className="dex-grid">
-        {CREATURES.map((c) => {
-          const got = !!caught[c.id]
-          return (
-            <button
-              key={c.id}
-              className={`dex-slot ${got ? 'got' : ''} ${highlight === c.id ? 'new' : ''}`}
-              onClick={() => got && setOpen(c)}
-              style={{ ['--accent' as string]: c.palette.body }}
-            >
-              <span className="dex-num">#{String(c.number).padStart(3, '0')}</span>
-              <CreatureArt creature={c} silhouette={!got} size={96} />
-              <span className="dex-name">{got ? c.name : '???'}</span>
-              <span className="dex-spot">{got ? c.spot : 'Undiscovered'}</span>
-              {highlight === c.id && <span className="new-badge">NEW</span>}
-            </button>
-          )
-        })}
-      </div>
+      {night ? (
+        <div className="slog-list">
+          {CREATURES.map((c) => {
+            const got = caught[c.id]
+            const live = !got && active[c.id]
+            return (
+              <button key={c.id} className={`slog-row ${got ? 'got' : live ? 'live' : 'dormant'}`} onClick={() => got && setOpen(c)} disabled={!got}>
+                <span className="slog-art">{got ? <CreatureArt creature={c} size={56} /> : live ? '??' : '··'}</span>
+                <span className="slog-text">
+                  <span className="slog-kicker">
+                    {num(c)} · {got ? c.type.toUpperCase() : live ? 'ACTIVE NOW' : 'DORMANT'}
+                    {c.rarity !== 'common' ? ` · ${RARITY_LABEL[c.rarity].toUpperCase()}` : ''}
+                  </span>
+                  <span className="slog-name">{got ? c.name : live ? 'Unknown signal' : 'No signal'}</span>
+                  <span className="slog-sub">
+                    {c.spot} · {got ? `logged ${timeOf(got)}` : c.hours.label}
+                  </span>
+                </span>
+                {highlight === c.id && <span className="slog-new">NEW</span>}
+              </button>
+            )
+          })}
+        </div>
+      ) : (
+        <div className="jgrid">
+          {CREATURES.map((c, i) => {
+            const got = caught[c.id]
+            const tilt = [-1.5, 1, 0.5, -1, 1.2, -0.6][i % 6]
+            return (
+              <button
+                key={c.id}
+                className={`jcard ${got ? 'got' : ''}`}
+                style={{ transform: `rotate(${tilt}deg)`, ['--ink' as string]: c.palette.body }}
+                onClick={() => got && setOpen(c)}
+                disabled={!got}
+              >
+                {got && <span className="jcard-tape" />}
+                <span className="jcard-num">NO. {num(c)}</span>
+                <span className="jcard-art">{got ? <CreatureArt creature={c} size={72} /> : '?'}</span>
+                <span className="jcard-name">{got ? c.name : 'Unknown'}</span>
+                <span className="jcard-note">{got ? `${c.spot}, ${timeOf(got)}.` : `${c.spot}. ${c.hours.label}.`}</span>
+                {c.rarity !== 'common' && !got && <span className="jcard-rare">{c.rarity === 'ultra' ? 'ultra rare!!' : 'rare!'}</span>}
+                {highlight === c.id && <span className="jcard-new">new!</span>}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
-      <button className="link" onClick={onReset}>
-        Reset progress
+      <button className="journal-reset" onClick={onReset}>
+        {night ? 'RESET LOG' : 'Reset progress'}
       </button>
 
       {open && (
-        <div className="modal" onClick={() => setOpen(null)}>
-          <div className="dex-card" style={{ ['--accent' as string]: open.palette.body }} onClick={(e) => e.stopPropagation()}>
-            <div className="dex-card-head">
-              <span>#{String(open.number).padStart(3, '0')}</span>
-              <span className="type-pill">{open.type}</span>
+        <div className={`entry-backdrop ${theme}`} onClick={() => setOpen(null)}>
+          <div className="entry" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={open.name}>
+            <div className="entry-head">
+              <span>{night ? `${num(open)} · ${open.type.toUpperCase()}` : `No. ${num(open)} · ${open.type}`}</span>
+              <span className="entry-rarity">{night ? RARITY_LABEL[open.rarity].toUpperCase() : RARITY_LABEL[open.rarity]}</span>
             </div>
-            <div className="dex-card-art">
+            <div className="entry-art">
               <CreatureArt creature={open} size={170} />
             </div>
-            <h2>{open.name}</h2>
-            <p className="dex-card-spot">
+            <h2 className="entry-name">{open.name}</h2>
+            <p className="entry-where">
               {open.spot} · {open.hours.label}
             </p>
-            <p className="dex-card-lore">{open.lore}</p>
-            <p className="muted small">Caught {new Date(caught[open.id]).toLocaleString()}</p>
+            <p className="entry-lore">{open.lore}</p>
+            <p className="entry-foot">
+              {night ? `LOGGED ${dateOf(caught[open.id]).toUpperCase()} · ${timeOf(caught[open.id])} · INSPIRED BY ${open.inspiredBy.toUpperCase()}` : `Logged ${dateOf(caught[open.id])}, ${timeOf(caught[open.id])} · inspired by ${open.inspiredBy}`}
+            </p>
+            <button className="entry-close" onClick={() => setOpen(null)}>
+              {night ? 'CLOSE' : 'Close'}
+            </button>
           </div>
         </div>
       )}
