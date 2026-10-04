@@ -666,7 +666,7 @@
 .arena-logo { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); transition: opacity .3s, transform .3s, filter .3s; }
 
 /* Palantir: the seeing-stone symbol as a dark, rippling battlefield. */
-.arena-palantir { background: radial-gradient(circle at 50% 50%, rgba(22,26,42,0.6), rgba(5,6,10,0.9) 72%); }
+.arena-palantir { background: radial-gradient(circle at 50% 50%, rgba(22,26,42,0.12), rgba(5,6,10,0.55) 80%); }
 .arena-palantir.solid { background: radial-gradient(circle at 50% 50%, #161a2a, #05060a 72%); }
 .arena-palantir .arena-logo { height: 64vh; filter: invert(1) drop-shadow(0 0 28px rgba(127,227,255,0.55)); opacity: 0.2; animation: logo-breathe 4s ease-in-out infinite; }
 .arena-palantir .arena-word { position: absolute; left: 50%; bottom: 23%; transform: translateX(-50%); height: 22px; filter: invert(1); opacity: 0.35; }
@@ -677,9 +677,9 @@
 @keyframes logo-breathe { 50% { opacity: 0.3; } }
 
 /* Anthropic: the wordmark as a kiln that heats up with Kiln's state. */
-.arena-anthropic.form-dozing { background: rgba(240,238,230,0.88); }
-.arena-anthropic.form-awake { background: radial-gradient(circle at 50% 55%, rgba(246,214,170,0.92), rgba(222,170,120,0.92) 80%); }
-.arena-anthropic.form-furious { background: radial-gradient(circle at 50% 55%, rgba(120,40,22,0.92), rgba(20,20,19,0.95) 70%); }
+.arena-anthropic.form-dozing { background: radial-gradient(circle at 50% 55%, rgba(240,238,230,0.1), rgba(240,238,230,0.5) 80%); }
+.arena-anthropic.form-awake { background: radial-gradient(circle at 50% 55%, rgba(246,214,170,0.15), rgba(222,170,120,0.55) 80%); }
+.arena-anthropic.form-furious { background: radial-gradient(circle at 50% 55%, rgba(120,40,22,0.25), rgba(20,20,19,0.65) 75%); }
 .arena-anthropic.solid.form-dozing { background: #f0eee6; }
 .arena-anthropic.solid.form-awake { background: radial-gradient(circle at 50% 55%, #f6d6aa, #deaa78 80%); }
 .arena-anthropic.solid.form-furious { background: radial-gradient(circle at 50% 55%, #782816, #141413 70%); }
@@ -712,7 +712,7 @@
 .arena-palantir::after { content: ''; position: absolute; left: 50%; top: 58%; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; background: radial-gradient(circle, rgba(127,227,255,0.32), rgba(127,227,255,0) 65%); }
 
 /* SpaceX: deep space, Earth's limb, the X-and-swoosh as the battlefield. */
-.arena-spacex { background: radial-gradient(ellipse at 50% 110%, rgba(30,70,140,0.75), rgba(4,7,18,0.92) 60%); }
+.arena-spacex { background: radial-gradient(ellipse at 50% 110%, rgba(30,70,140,0.35), rgba(4,7,18,0.5) 70%); }
 .arena-spacex.solid { background: radial-gradient(ellipse at 50% 110%, #1e468c, #04070f 60%); }
 .arena-stars { position: absolute; inset: 0; opacity: 0.85;
   background-image: radial-gradient(1px 1px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 72% 12%, #fff, transparent), radial-gradient(1.5px 1.5px at 40% 30%, #fff, transparent), radial-gradient(1px 1px at 86% 40%, #fff, transparent), radial-gradient(1px 1px at 22% 52%, #fff, transparent), radial-gradient(1.5px 1.5px at 60% 8%, #fff, transparent), radial-gradient(1px 1px at 92% 66%, #fff, transparent), radial-gradient(1px 1px at 6% 72%, #fff, transparent), radial-gradient(1px 1px at 50% 44%, #fff, transparent);
@@ -726,7 +726,7 @@
 .arena-spacex.flare .arena-logo { filter: brightness(0) invert(1) drop-shadow(0 0 40px rgba(255,170,90,0.9)); }
 
 /* Capital One: a bright vault, logo in its real colours. */
-.arena-capitalone { background: radial-gradient(circle at 50% 46%, rgba(255,255,255,0.92), rgba(214,226,240,0.94) 70%); }
+.arena-capitalone { background: radial-gradient(circle at 50% 46%, rgba(255,255,255,0.1), rgba(214,226,240,0.5) 80%); }
 .arena-capitalone.solid { background: radial-gradient(circle at 50% 46%, #ffffff, #d6e2f0 70%); }
 .arena-vault { position: absolute; left: 50%; top: 46%; width: 88vmin; height: 88vmin; margin: -44vmin 0 0 -44vmin; transition: transform .6s cubic-bezier(.3,1.5,.5,1); }
 .arena-vault span { position: absolute; inset: 0; border-radius: 50%; border: 3px solid rgba(0,73,119,0.18); }
@@ -741,7 +741,7 @@
 .enc.night:has(.arena-capitalone) .enc-bottom { background: linear-gradient(rgba(214,226,240,0), #d6e2f0 55%); }
 
 /* CEC: Prism, built from the club's faceted triangle. */
-.arena-cec { background: radial-gradient(circle at 50% 45%, rgba(255,251,240,0.9), rgba(246,226,214,0.92) 75%); }
+.arena-cec { background: radial-gradient(circle at 50% 45%, rgba(255,251,240,0.1), rgba(246,226,214,0.5) 80%); }
 .arena-cec.solid { background: radial-gradient(circle at 50% 45%, #fffbf0, #f6e2d6 75%); }
 .arena-prism { position: absolute; left: 50%; top: 48%; width: 120vmin; height: 120vmin; margin: -60vmin 0 0 -60vmin; overflow: visible; }
 .arena-prism polygon { fill: none; stroke: url(#prism-edge); stroke-linejoin: round; transform-origin: 0 0; }
@@ -758,7 +758,7 @@
 .enc.night:has(.arena-cec) .enc-bottom { background: linear-gradient(rgba(246,226,214,0), #f6e2d6 55%); }
 
 /* Asian Chili Spot: flames, embers and a red-hot glow. */
-.arena-chili { background: radial-gradient(ellipse at 50% 100%, rgba(255,90,30,0.9), rgba(140,12,6,0.93) 45%, rgba(40,4,2,0.96) 80%); }
+.arena-chili { background: radial-gradient(ellipse at 50% 100%, rgba(255,90,30,0.45), rgba(140,12,6,0.25) 45%, rgba(40,4,2,0.5) 85%); }
 .arena-chili.solid { background: radial-gradient(ellipse at 50% 100%, #ff5a1e, #8c0c06 45%, #280402 80%); }
 .arena-heat { position: absolute; left: 50%; top: 56%; width: 340px; height: 340px; margin: -170px 0 0 -170px; border-radius: 50%; background: radial-gradient(circle, rgba(255,170,60,0.45), rgba(255,60,20,0) 65%); animation: heat-pulse 1.4s ease-in-out infinite; }
 @keyframes heat-pulse { 50% { transform: scale(1.12); opacity: 0.8; } }

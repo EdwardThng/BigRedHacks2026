@@ -10,6 +10,8 @@ type Phase = 'appear' | 'ready' | 'throw' | 'shake' | 'miss' | 'transform' | 'ca
 
 /** ?misses=N scripts a demo: the first N throws miss and the next one catches, walking through every Kiln state. */
 const FORCED_MISSES = Number(new URLSearchParams(window.location.search).get('misses') ?? 0)
+/** ?sure=<id> makes the first throw at that creature a guaranteed catch (end-to-end test on a phone). */
+const SURE = new URLSearchParams(window.location.search).get('sure')
 type CamStatus = 'starting' | 'on' | 'off'
 
 type Props = {
@@ -92,7 +94,7 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
     if (phase === 'throw') {
       // Decide now so the shake count can tell the story: three shakes and a click, or it bursts out early.
       // With ?misses=N the run is scripted: N misses, then a sure catch (or an escape if N uses every try).
-      success.current = FORCED_MISSES > 0 ? attempt > FORCED_MISSES : Math.random() < stage.catchRate
+      success.current = SURE === creature.id || (FORCED_MISSES > 0 ? attempt > FORCED_MISSES : Math.random() < stage.catchRate)
       setShakes(success.current ? 3 : 1 + Math.floor(Math.random() * 2))
       after(750, () => setPhase('shake'))
     }

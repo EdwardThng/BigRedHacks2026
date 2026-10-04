@@ -14,6 +14,24 @@ const DEMO = PARAMS.has('demo')
 const HOUR_OVERRIDE = PARAMS.has('time') ? Number(PARAMS.get('time')) : null
 /** ?theme=day|night forces the map style. */
 const THEME_OVERRIDE = (['day', 'night'] as const).find((t) => t === PARAMS.get('theme')) ?? null
+/** ?sure=kiln keeps that creature out all the time (real GPS still applies); CatchScreen makes the first throw catch it. */
+const SURE = PARAMS.get('sure')
+// Test runs start fresh: ?sure=<id> forgets that creature on every load, ?fresh forgets every catch.
+// Runs before the first render so useCaught reads the cleaned storage.
+try {
+  if (PARAMS.has('fresh')) {
+    localStorage.removeItem('bigreddex:caught')
+    localStorage.removeItem('bigreddex:escaped')
+  } else if (SURE) {
+    for (const key of ['bigreddex:caught', 'bigreddex:escaped']) {
+      const saved = JSON.parse(localStorage.getItem(key) || '{}')
+      delete saved[SURE]
+      localStorage.setItem(key, JSON.stringify(saved))
+    }
+  }
+} catch {
+  // storage unavailable; nothing saved to clear
+}
 /** Most GPS error (metres) that counts toward reaching a catch ring. */
 const GPS_SLACK_MAX = 20
 const ESCAPED_KEY = 'bigreddex:escaped'
@@ -61,6 +79,7 @@ export default function App() {
       Object.fromEntries(
         CREATURES.map((c) => {
           const fled = escaped[c.id] != null && Date.now() - escaped[c.id] < ESCAPE_COOLDOWN_MS
+          if (c.id === SURE) return [c.id, true]
           return [c.id, (DEMO || !fled) && (DEMO || !ENFORCE_HOURS || isActive(c, now))]
         }),
       ),

@@ -106,6 +106,8 @@ A PNG at `public/creatures/<id>.png` overrides any creature's art.
 | `?theme=day` / `?theme=night` | Force the map style |
 | `?demo&encounter=<id>` | Open an encounter immediately (ids: `scryvern`, `boostling`, `pitchling`, `kiln`, `vaultling`, `chilibao`) |
 | `&misses=N` | Script the run: N misses, then a sure catch (`kiln` with `misses=5` shows every state; `misses=6` shows the escape) |
+| `?sure=<id>` | Real-GPS test run: that creature is always out, the first throw catches it, and its saved catch/escape is cleared on every load |
+| `?fresh` | Clear every saved catch and escape timer on load |
 
 Recording recipes:
 - Day map: `?demo&time=10`

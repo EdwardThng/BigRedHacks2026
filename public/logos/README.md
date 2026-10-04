@@ -7,3 +7,4 @@ Trademarks belong to their owners; used to credit Big Red Hacks 2026 sponsors.
 - spacex.svg, spacex-x.svg: "SpaceX-Logo.svg" and "SpaceX-Logo-Xonly.svg" (public domain on Commons; trademarks of SpaceX)
 - capitalone.svg: "Capital One logo.svg" (public domain on Commons; trademark of Capital One)
 - cec.png: Cornell Entrepreneurship Club logo, provided by the team (padding trimmed); swap in a higher-res file with the same name when available
+- cornell-bear.png: Cornell Big Red bear-and-C logo, provided by the team (white background removed); trademark of Cornell University
