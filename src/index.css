@@ -1,0 +1,18 @@
+:root {
+  --red: #b31b1b;
+  --red-dark: #7f1212;
+  --ink: #111827;
+  --muted: #6b7280;
+  --bg: #fdf8f3;
+  --card: #ffffff;
+  --line: #ece4da;
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; overscroll-behavior: none; }
+body { background: var(--bg); }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2 { margin: 0; }
