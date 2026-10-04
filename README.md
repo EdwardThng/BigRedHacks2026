@@ -38,6 +38,7 @@ Useful URL flags:
 - `?demo`: every creature spawns, and tapping the map moves you (for recordings)
 - `?time=0`: pin the clock to an hour (here midnight), which drives the theme and spawns
 - `?theme=day` or `?theme=night`: force a map style
+- `?demo&encounter=kiln`: open an encounter straight away; add `&misses=5` to script it: that many misses, then a sure catch (Kiln: 3 dozing, 2 awake, caught on the furious last try; `&misses=6` shows the escape)
 
 ## Stack
 

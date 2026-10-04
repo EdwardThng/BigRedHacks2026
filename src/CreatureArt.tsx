@@ -1,13 +1,17 @@
 import { useState, type ReactNode } from 'react'
 import type { Creature } from './data/creatures'
 
-type Props = { creature: Creature; silhouette?: boolean; size?: number; vectorOnly?: boolean }
+/** Some creatures change form mid-encounter (Kiln: dozing → awake → furious). */
+export type Form = 'dozing' | 'awake' | 'furious'
+
+type Props = { creature: Creature; silhouette?: boolean; size?: number; vectorOnly?: boolean; form?: Form }
 
 const INK = '#1b1b24'
 
 // Vector art in a soft blob, dot-eye style; drop a PNG at public/creatures/<id>.png to replace one.
-export function CreatureArt({ creature, silhouette = false, size = 160, vectorOnly = false }: Props) {
-  const [hasPng, setHasPng] = useState(!vectorOnly)
+export function CreatureArt({ creature, silhouette = false, size = 160, vectorOnly = false, form }: Props) {
+  const formKey = form && form !== 'dozing' ? `${creature.id}-${form}` : null
+  const [hasPng, setHasPng] = useState(!vectorOnly && !formKey)
   if (hasPng) {
     return (
       <img
@@ -21,7 +25,7 @@ export function CreatureArt({ creature, silhouette = false, size = 160, vectorOn
     )
   }
   const f = (c: string) => (silhouette ? '#1f2937' : c)
-  const draw = DRAWINGS[creature.id] ?? DRAWINGS.chilibao
+  const draw = (formKey && DRAWINGS[formKey]) || DRAWINGS[creature.id] || DRAWINGS.chilibao
 
   return (
     <svg viewBox="0 0 200 200" width={size} height={size} className={silhouette ? 'art silhouette' : 'art'}>
@@ -137,6 +141,87 @@ const DRAWINGS: Record<string, Draw> = {
       <ellipse cx="104" cy="142" rx="7" ry="4" fill={f('#f2b4a8')} />
       <path d="M74 148 Q80 152 86 148" stroke={f(p.accent)} strokeWidth="2.5" fill="none" strokeLinecap="round" />
       <path d="M81 149.5 L83 156 L85 149.5Z" fill={f('#ffffff')} stroke={f(p.accent)} strokeWidth="0.8" />
+    </g>
+  ),
+
+  // Kiln, state 2 (tries 4–5): sitting up, unimpressed. Flat half-lids, third eye glowing pale.
+  'kiln-awake': (f, p) => (
+    <g>
+      <ellipse cx="100" cy="178" rx="66" ry="10" fill={f('#151519')} />
+      <ellipse cx="100" cy="173" rx="58" ry="7" fill={f('#2a2a30')} />
+      <path d="M126 152 C152 156 158 138 150 120" stroke={f(p.accent)} strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M146 118 C143 106 153 100 158 109 C160 116 153 122 146 118Z" fill={f(p.accent)} />
+      <path d="M54 70 L42 62 L50 80Z M50 96 L38 104 L52 102Z M146 70 L158 62 L150 80Z M150 96 L162 104 L148 102Z" fill={f(p.accent)} />
+      <path d="M60 82 L28 74 L56 100Z" fill={f(p.body)} />
+      <path d="M140 82 L172 74 L144 100Z" fill={f(p.body)} />
+      <ellipse cx="86" cy="170" rx="11" ry="6" fill={f('#e3d6b2')} />
+      <ellipse cx="114" cy="170" rx="11" ry="6" fill={f('#e3d6b2')} />
+      <ellipse cx="100" cy="142" rx="31" ry="30" fill={f(p.body)} />
+      <ellipse cx="100" cy="148" rx="18" ry="16" fill={f(p.belly)} />
+      <path d="M90 142 L110 142 M88 148 L112 148 M90 154 L110 154" stroke={f('#d9cba6')} strokeWidth="2" />
+      <ellipse cx="71" cy="138" rx="8" ry="11" fill={f(p.body)} />
+      <ellipse cx="129" cy="138" rx="8" ry="11" fill={f(p.body)} />
+      <path d="M66 150 L61 157 L70 153Z M134 150 L139 157 L130 153Z" fill={f(p.accent)} />
+      <path d="M82 50 C70 34 72 16 84 8 C81 24 87 36 93 46Z" fill={f(p.accent)} />
+      <path d="M118 50 C130 34 128 16 116 8 C119 24 113 36 107 46Z" fill={f(p.accent)} />
+      <circle cx="100" cy="84" r="42" fill={f(p.body)} />
+      <circle cx="100" cy="61" r="13" fill={f('#fff7d6')} opacity="0.7" />
+      <circle cx="100" cy="61" r="9" fill={f(p.belly)} />
+      <ellipse cx="100" cy="61" rx="3.5" ry="6" fill={f(p.accent)} />
+      <path d="M74 86 A11 11 0 0 0 96 86Z" fill={f(p.accent)} />
+      <path d="M104 86 A11 11 0 0 0 126 86Z" fill={f(p.accent)} />
+      <circle cx="81" cy="90" r="2.6" fill={f('#ffffff')} />
+      <circle cx="111" cy="90" r="2.6" fill={f('#ffffff')} />
+      <path d="M71 85 L99 84 M101 84 L129 85" stroke={f(p.accent)} strokeWidth="3" strokeLinecap="round" />
+      <ellipse cx="72" cy="101" rx="7" ry="4" fill={f('#f2b4a8')} />
+      <ellipse cx="128" cy="101" rx="7" ry="4" fill={f('#f2b4a8')} />
+      <path d="M95 105 L105 105" stroke={f(p.accent)} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M100 105.5 L101.5 110 L103 105.5Z" fill={f('#ffffff')} />
+    </g>
+  ),
+
+  // Kiln, state 3 (try 6): furious. Wings spread, all three eyes glowing, cracks lit, smoke from the horns.
+  'kiln-furious': (f, p) => (
+    <g>
+      <circle cx="100" cy="98" r="86" fill={f('#e8b8ad')} opacity="0.55" />
+      <circle cx="62" cy="26" r="5" fill={f('#b9b5ae')} />
+      <circle cx="70" cy="18" r="4" fill={f('#b9b5ae')} />
+      <circle cx="138" cy="26" r="5" fill={f('#b9b5ae')} />
+      <circle cx="130" cy="18" r="4" fill={f('#b9b5ae')} />
+      <ellipse cx="100" cy="178" rx="66" ry="10" fill={f('#151519')} />
+      <ellipse cx="100" cy="173" rx="58" ry="7" fill={f('#2a2a30')} />
+      <path d="M62 94 L12 58 L24 86 L4 96 L28 106 L14 126 L58 114Z" fill={f(p.accent)} />
+      <path d="M138 94 L188 58 L176 86 L196 96 L172 106 L186 126 L142 114Z" fill={f(p.accent)} />
+      <path d="M24 86 L58 100 M28 106 L58 108 M176 86 L142 100 M172 106 L142 108" stroke={f('#3a3a44')} strokeWidth="2" />
+      <path d="M126 152 C156 158 166 136 154 112" stroke={f(p.accent)} strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M60 80 L30 70 L56 98Z" fill={f(p.body)} />
+      <path d="M140 80 L170 70 L144 98Z" fill={f(p.body)} />
+      <ellipse cx="86" cy="170" rx="11" ry="6" fill={f('#e3d6b2')} />
+      <ellipse cx="114" cy="170" rx="11" ry="6" fill={f('#e3d6b2')} />
+      <path d="M78 172 L80 178 L83 172Z M92 172 L94 178 L97 172Z M106 172 L108 178 L111 172Z M120 172 L122 178 L125 172Z" fill={f(p.accent)} />
+      <ellipse cx="100" cy="142" rx="31" ry="30" fill={f(p.body)} />
+      <ellipse cx="100" cy="148" rx="18" ry="16" fill={f(p.belly)} />
+      <path d="M96 138 L91 147 L96 155 M106 138 L111 147 L105 156" stroke={f('#d63a2a')} strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      <ellipse cx="70" cy="134" rx="8" ry="11" fill={f(p.body)} transform="rotate(-25 70 134)" />
+      <ellipse cx="130" cy="134" rx="8" ry="11" fill={f(p.body)} transform="rotate(25 130 134)" />
+      <path d="M54 126 L46 122 M56 133 L46 133 M146 126 L154 122 M144 133 L154 133" stroke={f(p.accent)} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M80 50 C66 32 68 12 82 2 C78 20 86 34 93 46Z" fill={f(p.accent)} />
+      <path d="M120 50 C134 32 132 12 118 2 C122 20 114 34 107 46Z" fill={f(p.accent)} />
+      <circle cx="100" cy="84" r="42" fill={f(p.body)} />
+      <rect x="90" y="48" width="20" height="25" rx="7" fill={f('#e9a08c')} />
+      <ellipse cx="100" cy="61" rx="5" ry="8.5" fill={f(p.accent)} />
+      <ellipse cx="100" cy="61" rx="2.6" ry="5.6" fill={f('#d63a2a')} />
+      <path d="M68 74 L96 83 M132 74 L104 83" stroke={f(p.accent)} strokeWidth="5" strokeLinecap="round" />
+      <circle cx="85" cy="93" r="11" fill={f(p.accent)} />
+      <circle cx="115" cy="93" r="11" fill={f(p.accent)} />
+      <ellipse cx="86" cy="94" rx="4" ry="6" fill={f('#d63a2a')} />
+      <ellipse cx="114" cy="94" rx="4" ry="6" fill={f('#d63a2a')} />
+      <circle cx="88" cy="89" r="2" fill={f('#ffffff')} />
+      <circle cx="116" cy="89" r="2" fill={f('#ffffff')} />
+      <path d="M86 106 Q100 122 114 106Z" fill={f(p.accent)} />
+      <ellipse cx="100" cy="114" rx="6" ry="3" fill={f('#c0392b')} />
+      <path d="M89 106 L92 112 L95 106Z M105 106 L108 112 L111 106Z" fill={f('#ffffff')} />
+      <path d="M64 90 L70 98 L65 105 M117 57 L113 65" stroke={f('#d63a2a')} strokeWidth="2.2" fill="none" strokeLinecap="round" />
     </g>
   ),
 

@@ -1,4 +1,9 @@
+import type { Form } from '../CreatureArt'
+
 export type Rarity = 'common' | 'rare' | 'ultra'
+
+/** One phase of a multi-try encounter: which form it shows, how many throws it lasts, and the catch chance. */
+export type Stage = { form: Form; name: string; tries: number; catchRate: number; tell: string }
 
 export type Creature = {
   id: string
@@ -22,6 +27,8 @@ export type Creature = {
   note: string
   lore: string
   palette: { body: string; belly: string; accent: string }
+  /** Multi-stage encounter. Without it, a single throw always catches. */
+  stages?: Stage[]
 }
 
 /** Chance a creature is out during each 20-minute slot of its window. */
@@ -101,6 +108,12 @@ export const CREATURES: Creature[] = [
     note: 'snoring? one eye open…',
     lore: 'Kiln sleeps curled up on its cushion at the foot of McGraw Tower, snoring through the midnight chimes. Its third eye never closes, so it always knows exactly who is sneaking up on it.',
     palette: { body: '#efe3c4', belly: '#f6edd6', accent: '#1b1b24' },
+    // Six tries, three states. Catch rates are placeholders from the design sheet; tune freely.
+    stages: [
+      { form: 'dozing', name: 'Dozing', tries: 3, catchRate: 0.25, tell: 'Asleep; the third eye watches' },
+      { form: 'awake', name: 'Awake', tries: 2, catchRate: 0.15, tell: 'Sitting up, annoyed, dodging' },
+      { form: 'furious', name: 'Furious', tries: 1, catchRate: 0.3, tell: 'Roaring, wings spread. One last try.' },
+    ],
   },
   {
     id: 'vaultling',

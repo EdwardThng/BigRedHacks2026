@@ -16,6 +16,9 @@ const HOUR_OVERRIDE = PARAMS.has('time') ? Number(PARAMS.get('time')) : null
 const THEME_OVERRIDE = (['day', 'night'] as const).find((t) => t === PARAMS.get('theme')) ?? null
 /** Most GPS error (metres) that counts toward reaching a catch ring. */
 const GPS_SLACK_MAX = 20
+const ESCAPED_KEY = 'bigreddex:escaped'
+/** An escaped creature stays gone for the rest of its window (Kiln's is 2 hours). */
+const ESCAPE_COOLDOWN_MS = 3 * 60 * 60 * 1000
 
 type Tab = 'map' | 'dex'
 
@@ -29,13 +32,39 @@ export default function App() {
   const { now, clock, theme, switchLabel } = useClock(HOUR_OVERRIDE, THEME_OVERRIDE)
   const [tab, setTab] = useState<Tab>('map')
   const [targetId, setTargetId] = useState<string | null>(null)
-  const [encounter, setEncounter] = useState<Creature | null>(null)
+  // ?demo&encounter=kiln jumps straight into an encounter (handy for rehearsing the catch).
+  const [encounter, setEncounter] = useState<Creature | null>(() => (DEMO ? CREATURES.find((c) => c.id === PARAMS.get('encounter')) ?? null : null))
   const [justCaught, setJustCaught] = useState<string | null>(null)
+
+  // Creatures that escaped stay away until their window has passed.
+  const [escaped, setEscaped] = useState<Record<string, number>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(ESCAPED_KEY) || '{}')
+    } catch {
+      return {}
+    }
+  })
+  const markEscaped = (id: string) =>
+    setEscaped((e) => {
+      const next = { ...e, [id]: Date.now() }
+      try {
+        localStorage.setItem(ESCAPED_KEY, JSON.stringify(next))
+      } catch {
+        // storage unavailable; the escape lasts for this session only
+      }
+      return next
+    })
 
   // Who is out right now (rarity + time window). Demo mode spawns everyone so recordings always work.
   const active = useMemo(
-    () => Object.fromEntries(CREATURES.map((c) => [c.id, DEMO || !ENFORCE_HOURS || isActive(c, now)])),
-    [now],
+    () =>
+      Object.fromEntries(
+        CREATURES.map((c) => {
+          const fled = escaped[c.id] != null && Date.now() - escaped[c.id] < ESCAPE_COOLDOWN_MS
+          return [c.id, (DEMO || !fled) && (DEMO || !ENFORCE_HOURS || isActive(c, now))]
+        }),
+      ),
+    [now, escaped],
   )
 
   const withDistance = useMemo(() => CREATURES.map((c) => ({ c, d: pos ? distanceMeters(pos, c) : Infinity })), [pos])
@@ -126,6 +155,7 @@ export default function App() {
             setTargetId(null)
           }}
           onClose={() => setEncounter(null)}
+          onEscape={() => markEscaped(encounter.id)}
           onOpenDex={() => {
             setEncounter(null)
             setTab('dex')
