@@ -10,9 +10,10 @@ type Phase = 'appear' | 'ready' | 'throw' | 'shake' | 'miss' | 'transform' | 'ca
 
 /** ?misses=N scripts a demo: the first N throws miss and the next one catches, walking through every Kiln state. */
 const FORCED_MISSES = Number(new URLSearchParams(window.location.search).get('misses') ?? 0)
-/** ?sure=<id> makes the first throw at that creature a guaranteed catch (end-to-end test on a phone). */
+/** ?sure=<id> makes the first throw at that creature a guaranteed catch (end-to-end test on a phone), unless ?misses scripts the run. */
 const SURE = new URLSearchParams(window.location.search).get('sure')
-type CamStatus = 'starting' | 'on' | 'off'
+/** ?fail=<id> makes every throw at that creature miss, so Kiln runs through all six tries and escapes. */
+const FAIL = new URLSearchParams(window.location.search).get('fail')
 
 type Props = {
   creature: Creature
@@ -24,49 +25,9 @@ type Props = {
   onEscape: () => void
 }
 
-/** Rear camera as a live backdrop. Falls back to a drawn scene if blocked or unavailable. */
-function useCamera(enabled: boolean) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [status, setStatus] = useState<CamStatus>('starting')
-
-  useEffect(() => {
-    if (!enabled) {
-      setStatus('off')
-      return
-    }
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setStatus('off')
-      return
-    }
-    let stream: MediaStream | null = null
-    let cancelled = false
-    setStatus('starting')
-    navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })
-      .then((s) => {
-        if (cancelled) return s.getTracks().forEach((t) => t.stop())
-        stream = s
-        if (videoRef.current) {
-          videoRef.current.srcObject = s
-          videoRef.current.play().catch(() => {})
-        }
-        setStatus('on')
-      })
-      .catch(() => !cancelled && setStatus('off'))
-    return () => {
-      cancelled = true
-      stream?.getTracks().forEach((t) => t.stop())
-    }
-  }, [enabled])
-
-  return { videoRef, status }
-}
-
 export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOpenDex, onEscape }: Props) {
   const night = theme === 'night'
   const [phase, setPhase] = useState<Phase>('appear')
-  const [camWanted, setCamWanted] = useState(true)
-  const { videoRef, status } = useCamera(camWanted)
   const [drag, setDrag] = useState(0)
   const dragStart = useRef<number | null>(null)
 
@@ -94,7 +55,8 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
     if (phase === 'throw') {
       // Decide now so the shake count can tell the story: three shakes and a click, or it bursts out early.
       // With ?misses=N the run is scripted: N misses, then a sure catch (or an escape if N uses every try).
-      success.current = SURE === creature.id || (FORCED_MISSES > 0 ? attempt > FORCED_MISSES : Math.random() < stage.catchRate)
+      // ?misses wins over ?sure, so ?sure=kiln&misses=6 tests an escape on a real walk-up.
+      success.current = FAIL === creature.id ? false : FORCED_MISSES > 0 ? attempt > FORCED_MISSES : SURE === creature.id || Math.random() < stage.catchRate
       setShakes(success.current ? 3 : 1 + Math.floor(Math.random() * 2))
       after(750, () => setPhase('shake'))
     }
@@ -161,10 +123,9 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
 
   return (
     <div className={`enc ${theme}`}>
-      <video ref={videoRef} className={`enc-video ${status === 'on' ? 'live' : ''}`} playsInline muted autoPlay aria-hidden="true" />
-      {status !== 'on' && !arena && <div className="enc-backdrop" aria-hidden="true" />}
+      {!arena && <div className="enc-backdrop" aria-hidden="true" />}
       {night && !arena && <div className="enc-night-tint" aria-hidden="true" />}
-      {arena && <Arena kind={arena} form={staged ? stage.form : 'dozing'} fx={arenaFx} solid={status !== 'on'} />}
+      {arena && <Arena kind={arena} form={staged ? stage.form : 'dozing'} fx={arenaFx} solid />}
 
       <header className="enc-head">
         <button className="enc-x" onClick={onClose} aria-label="Run away">
@@ -197,10 +158,6 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
           })}
         </div>
       )}
-
-      <button className="enc-cam" onClick={() => setCamWanted((v) => !v)}>
-        {status === 'on' ? (night ? 'CAM ON · NIGHT' : 'CAMERA ON') : status === 'starting' ? (night ? 'CAM…' : 'CAMERA…') : night ? 'CAM OFF' : 'CAMERA OFF'}
-      </button>
 
       <div className="enc-stage">
         {night && showCreature && <div className="enc-brackets" aria-hidden="true" />}

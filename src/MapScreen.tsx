@@ -23,6 +23,8 @@ type Props = {
   demo: boolean
   caught: Record<string, string>
   active: Record<string, boolean>
+  /** escaped creatures: id to the time (ms) they come back */
+  lockedUntil: Record<string, number>
   target: Creature | null
   inRange?: Creature
   inHabitat?: Creature
@@ -30,6 +32,9 @@ type Props = {
   onEncounter: (c: Creature) => void
   onDemoMove: (p: LatLng) => void
 }
+
+/** 3:12am-style time for lock notes. */
+const clockTime = (ms: number) => new Date(ms).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(' ', '').toLowerCase()
 
 /** Darkest usable ink for a creature's labels on paper. */
 function inkFor(c: Creature) {
@@ -50,7 +55,7 @@ function signal(d: number) {
 }
 
 export function MapScreen(props: Props) {
-  const { theme, clock, switchLabel, pos, accuracy, status, onRetry, demo, caught, active, target, inRange, inHabitat, onSelect, onEncounter, onDemoMove } = props
+  const { theme, clock, switchLabel, pos, accuracy, status, onRetry, demo, caught, active, lockedUntil, target, inRange, inHabitat, onSelect, onEncounter, onDemoMove } = props
   const [follow, setFollow] = useState(true)
   const [camera, setCamera] = useState<CameraCmd>({ kind: 'overview', n: 0 })
   const night = theme === 'night'
@@ -121,9 +126,9 @@ export function MapScreen(props: Props) {
       </div>
 
       {night ? (
-        <RadarCard target={target} pos={pos} caught={target ? !!caught[target.id] : false} active={target ? !!active[target.id] : false} inRange={inRange} onEncounter={onEncounter} />
+        <RadarCard target={target} pos={pos} caught={target ? !!caught[target.id] : false} active={target ? !!active[target.id] : false} lockedUntil={target ? lockedUntil[target.id] : undefined} inRange={inRange} onEncounter={onEncounter} />
       ) : (
-        <FieldNote target={target} pos={pos} caught={target ? !!caught[target.id] : false} active={target ? !!active[target.id] : false} inRange={inRange} inHabitat={inHabitat} onEncounter={onEncounter} />
+        <FieldNote target={target} pos={pos} caught={target ? !!caught[target.id] : false} active={target ? !!active[target.id] : false} lockedUntil={target ? lockedUntil[target.id] : undefined} inRange={inRange} inHabitat={inHabitat} onEncounter={onEncounter} />
       )}
     </div>
   )
@@ -165,7 +170,7 @@ function JournalZone({ creature: c, caught, active, selected, inside, onSelect }
   )
 }
 
-function FieldNote({ target, pos, caught, active, inRange, inHabitat, onEncounter }: { target: Creature | null; pos: LatLng | null; caught: boolean; active: boolean; inRange?: Creature; inHabitat?: Creature; onEncounter: (c: Creature) => void }) {
+function FieldNote({ target, pos, caught, active, lockedUntil, inRange, inHabitat, onEncounter }: { target: Creature | null; pos: LatLng | null; caught: boolean; active: boolean; lockedUntil?: number; inRange?: Creature; inHabitat?: Creature; onEncounter: (c: Creature) => void }) {
   if (!target) {
     return (
       <div className="fnote">
@@ -200,7 +205,7 @@ function FieldNote({ target, pos, caught, active, inRange, inHabitat, onEncounte
       </div>
       <p className="fnote-clue">{target.clue}</p>
       <p className="fnote-meta">
-        {caught ? 'Logged' : `${rarity}${target.hours.label} · ${active ? 'out now' : 'not out right now'}`}
+        {caught ? 'Logged' : lockedUntil ? `It escaped · locked until ${clockTime(lockedUntil)}` : `${rarity}${target.hours.label} · ${active ? 'out now' : 'not out right now'}`}
         {inHabitat?.id === target.id && !caught ? ' · you are in its habitat' : ''}
       </p>
     </div>
@@ -240,7 +245,7 @@ function Bars({ n }: { n: number }) {
   )
 }
 
-function RadarCard({ target, pos, caught, active, inRange, onEncounter }: { target: Creature | null; pos: LatLng | null; caught: boolean; active: boolean; inRange?: Creature; onEncounter: (c: Creature) => void }) {
+function RadarCard({ target, pos, caught, active, lockedUntil, inRange, onEncounter }: { target: Creature | null; pos: LatLng | null; caught: boolean; active: boolean; lockedUntil?: number; inRange?: Creature; onEncounter: (c: Creature) => void }) {
   if (!target) {
     return (
       <div className="rcard">
@@ -267,12 +272,12 @@ function RadarCard({ target, pos, caught, active, inRange, onEncounter }: { targ
   return (
     <div className="rcard">
       <div className="rcard-row">
-        <span className="rcard-title">{caught ? `Logged · ${target.brand}` : active ? `Signal near ${target.spot}` : `No signal · ${target.spot}`}</span>
+        <span className="rcard-title">{caught ? `Logged · ${target.brand}` : lockedUntil ? `Target fled · ${target.spot}` : active ? `Signal near ${target.spot}` : `No signal · ${target.spot}`}</span>
         <Bars n={active && !caught ? s.bars : 0} />
       </div>
       <p className="rcard-clue">{target.clue}</p>
       <p className="rcard-meta">
-        {RARITY_LABEL[target.rarity].toUpperCase()} · {target.hours.label.toUpperCase()}
+        {lockedUntil ? `LOCKED UNTIL ${clockTime(lockedUntil).toUpperCase()}` : `${RARITY_LABEL[target.rarity].toUpperCase()} · ${target.hours.label.toUpperCase()}`}
         {d != null ? ` · ${formatDistance(d).toUpperCase()}` : ''}
       </p>
     </div>

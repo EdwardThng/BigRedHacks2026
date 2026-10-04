@@ -15,19 +15,19 @@ const HOUR_OVERRIDE = PARAMS.has('time') ? Number(PARAMS.get('time')) : null
 /** ?theme=day|night forces the map style. */
 const THEME_OVERRIDE = (['day', 'night'] as const).find((t) => t === PARAMS.get('theme')) ?? null
 /** ?sure=kiln keeps that creature out all the time (real GPS still applies); CatchScreen makes the first throw catch it. */
-const SURE = PARAMS.get('sure')
-// Test runs start fresh: ?sure=<id> forgets that creature on every load, ?fresh forgets every catch.
+/** ?fail=kiln is the opposite test: it is always out, every throw misses, and it escapes after the last try. */
+const SURE = PARAMS.get('sure') ?? PARAMS.get('fail')
+// Test runs: ?sure/?fail forget that creature's catch on every load, but an escape lock survives
+// reloads (it is the thing being tested). ?fresh clears every catch and every lock.
 // Runs before the first render so useCaught reads the cleaned storage.
 try {
   if (PARAMS.has('fresh')) {
     localStorage.removeItem('bigreddex:caught')
     localStorage.removeItem('bigreddex:escaped')
   } else if (SURE) {
-    for (const key of ['bigreddex:caught', 'bigreddex:escaped']) {
-      const saved = JSON.parse(localStorage.getItem(key) || '{}')
-      delete saved[SURE]
-      localStorage.setItem(key, JSON.stringify(saved))
-    }
+    const saved = JSON.parse(localStorage.getItem('bigreddex:caught') || '{}')
+    delete saved[SURE]
+    localStorage.setItem('bigreddex:caught', JSON.stringify(saved))
   }
 } catch {
   // storage unavailable; nothing saved to clear
@@ -79,12 +79,23 @@ export default function App() {
       Object.fromEntries(
         CREATURES.map((c) => {
           const fled = escaped[c.id] != null && Date.now() - escaped[c.id] < ESCAPE_COOLDOWN_MS
-          if (c.id === SURE) return [c.id, true]
+          // Test links force the spawn, but an escape still locks it out (use ?fresh to unlock).
+          if (c.id === SURE) return [c.id, !fled]
           return [c.id, (DEMO || !fled) && (DEMO || !ENFORCE_HOURS || isActive(c, now))]
         }),
       ),
     [now, escaped],
   )
+
+  // When each escaped creature comes back, for the map's "locked" note.
+  // Demo mode ignores escapes, so it shows no locks.
+  const lockedUntil = DEMO
+    ? {}
+    : Object.fromEntries(
+        Object.entries(escaped)
+          .map(([id, at]) => [id, at + ESCAPE_COOLDOWN_MS] as const)
+          .filter(([, until]) => until > Date.now()),
+      )
 
   const withDistance = useMemo(() => CREATURES.map((c) => ({ c, d: pos ? distanceMeters(pos, c) : Infinity })), [pos])
 
@@ -137,6 +148,7 @@ export default function App() {
           demo={DEMO}
           caught={caught}
           active={active}
+          lockedUntil={lockedUntil}
           target={target}
           inRange={inRange}
           inHabitat={inHabitat}
