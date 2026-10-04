@@ -6,11 +6,10 @@ import type { Theme } from './theme'
 
 const COUNTDOWN_MS = 3000
 
-/** found: shown over the camera once the player has spotted the creature, so it is named instead of hidden. */
-type Props = { creature: Creature; theme: Theme; distance: number | null; found?: boolean; onGo: () => void; onDismiss: () => void }
+type Props = { creature: Creature; theme: Theme; distance: number | null; onGo: () => void; onDismiss: () => void }
 
-/** Pops up when you reach a creature (or spot it through the camera), then opens the encounter by itself. */
-export function EncounterAlert({ creature, theme, distance, found = false, onGo, onDismiss }: Props) {
+/** Pops over the map when you reach a creature, then opens the encounter by itself. */
+export function EncounterAlert({ creature, theme, distance, onGo, onDismiss }: Props) {
   useEffect(() => {
     if ('vibrate' in navigator) navigator.vibrate?.([80, 60, 80])
     const t = window.setTimeout(onGo, COUNTDOWN_MS)
@@ -23,10 +22,10 @@ export function EncounterAlert({ creature, theme, distance, found = false, onGo,
 
   if (theme === 'night') {
     return (
-      <div className="alert-backdrop night" role="alertdialog" aria-label={found ? 'Target discovered' : 'Signal locked'}>
+      <div className="alert-backdrop night" role="alertdialog" aria-label="Signal locked">
         <div className="alert night">
           <div className="alert-row">
-            <span className="alert-title">{found ? 'TARGET DISCOVERED' : 'SIGNAL LOCKED'}</span>
+            <span className="alert-title">SIGNAL LOCKED</span>
             <span className="rbars">
               {[1, 2, 3, 4].map((i) => (
                 <span key={i} className="on" style={{ height: 4 + i * 5 }} />
@@ -34,15 +33,9 @@ export function EncounterAlert({ creature, theme, distance, found = false, onGo,
             </span>
           </div>
           <div className="alert-who">
-            {found ? (
-              <span className="alert-unknown">
-                <CreatureArt creature={creature} size={52} vectorOnly />
-              </span>
-            ) : (
-              <span className="alert-unknown">??</span>
-            )}
+            <span className="alert-unknown">??</span>
             <span className="alert-text">
-              <span className="alert-name">{found ? `${creature.brand.toUpperCase()} · ${creature.name.toUpperCase()}` : `Unknown signal · ${creature.spot}`}</span>
+              <span className="alert-name">Unknown signal · {creature.spot}</span>
               <span className="alert-meta">
                 {RARITY_LABEL[creature.rarity].toUpperCase()}
                 {near ? ` · ${near.toUpperCase()}` : ''} · {creature.hours.label.toUpperCase()}
@@ -65,17 +58,17 @@ export function EncounterAlert({ creature, theme, distance, found = false, onGo,
   }
 
   return (
-    <div className="alert-backdrop day" role="alertdialog" aria-label={found ? 'Creature discovered' : 'Creature nearby'}>
+    <div className="alert-backdrop day" role="alertdialog" aria-label="Creature nearby">
       <div className="alert day">
         <span className="alert-tape" />
         <div className="alert-who">
           <span className="alert-sil">
-            <CreatureArt creature={creature} silhouette={!found} size={52} vectorOnly />
+            <CreatureArt creature={creature} silhouette size={52} vectorOnly />
           </span>
           <span className="alert-text">
-            <span className="alert-hand">{found ? `${creature.name} has been discovered!` : `Something stirs at ${creature.spot}!`}</span>
+            <span className="alert-hand">Something stirs at {creature.spot}!</span>
             <span className="alert-name">
-              {found ? `${creature.brand} · it knows you're here` : `${rarity} is ${near ?? 'close'} away`}
+              {rarity} is {near ?? 'close'} away
             </span>
           </span>
         </div>

@@ -108,7 +108,6 @@ A PNG at `public/creatures/<id>.png` overrides any creature's art.
 | `&misses=N` | Script the run: N misses, then a sure catch (`kiln` with `misses=5` shows every state; `misses=6` shows the escape) |
 | `?sure=<id>` | Real-GPS test run: that creature is always out, the first throw catches it, and its saved catch/escape is cleared on every load |
 | `?fresh` | Clear every saved catch and escape timer on load |
-| `?demo&search=<id>` | Open the camera search for that creature immediately (drag to look around if there is no compass) |
 
 Recording recipes:
 - Day map: `?demo&time=10`

@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { CREATURES, ENFORCE_HOURS, isActive, type Creature } from './data/creatures'
-import { bearingDegrees, distanceMeters, useCaught, usePosition, useVisitLog, type LatLng } from './game'
+import { distanceMeters, useCaught, usePosition, useVisitLog, type LatLng } from './game'
 import { CatchScreen } from './CatchScreen'
 import { Dex } from './Dex'
+import { EncounterAlert } from './EncounterAlert'
 import { MapScreen } from './MapScreen'
-import { SearchScreen } from './SearchScreen'
 import { useClock, type Theme } from './theme'
 
 const PARAMS = new URLSearchParams(window.location.search)
@@ -34,8 +34,6 @@ try {
 }
 /** Most GPS error (metres) that counts toward reaching a catch ring. */
 const GPS_SLACK_MAX = 20
-/** Within this many metres of an active creature, the camera opens so you can look around for it. */
-const SEARCH_RADIUS = 50
 const ESCAPED_KEY = 'bigreddex:escaped'
 /** An escaped creature stays gone for the rest of its window (Kiln's is 2 hours). */
 const ESCAPE_COOLDOWN_MS = 3 * 60 * 60 * 1000
@@ -54,8 +52,6 @@ export default function App() {
   const [targetId, setTargetId] = useState<string | null>(null)
   // ?demo&encounter=kiln jumps straight into an encounter (handy for rehearsing the catch).
   const [encounter, setEncounter] = useState<Creature | null>(() => (DEMO ? CREATURES.find((c) => c.id === PARAMS.get('encounter')) ?? null : null))
-  // ?demo&search=kiln opens the camera search straight away (rehearsing the find).
-  const [search, setSearch] = useState<Creature | null>(() => (DEMO ? CREATURES.find((c) => c.id === PARAMS.get('search')) ?? null : null))
   const [justCaught, setJustCaught] = useState<string | null>(null)
 
   // Creatures that escaped stay away until their window has passed.
@@ -105,20 +101,22 @@ export default function App() {
   const inHabitat = withDistance.find(({ c, d }) => !caught[c.id] && d <= c.habitat)?.c
   useVisitLog(withDistance.find(({ c, d }) => d <= c.habitat)?.c.id, pos, accuracy)
 
-  // Coming within SEARCH_RADIUS opens the camera search once; closing it mutes that creature until you walk away.
-  const nearby = withDistance.find(({ c, d }) => !caught[c.id] && active[c.id] && d <= SEARCH_RADIUS + slack)?.c
+  // Reaching a catch ring pops the alert once; "Not now" or running away mutes it until you leave the ring.
+  const [alertFor, setAlertFor] = useState<Creature | null>(null)
   const muted = useRef(new Set<string>())
   useEffect(() => {
-    if (!nearby) {
+    if (!inRange) {
       muted.current.clear()
+      setAlertFor(null)
       return
     }
-    if (!encounter && !search && !muted.current.has(nearby.id)) setSearch(nearby)
+    if (!encounter && !muted.current.has(inRange.id)) setAlertFor(inRange)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nearby?.id])
-  const startSearch = (c: Creature) => {
+  }, [inRange?.id])
+  const startEncounter = (c: Creature) => {
     muted.current.add(c.id)
-    setSearch(c)
+    setAlertFor(null)
+    setEncounter(c)
   }
   const distanceTo = (c: Creature) => {
     const d = withDistance.find((w) => w.c.id === c.id)?.d
@@ -143,7 +141,7 @@ export default function App() {
           inRange={inRange}
           inHabitat={inHabitat}
           onSelect={setTargetId}
-          onEncounter={startSearch}
+          onEncounter={startEncounter}
           onDemoMove={setManualPos}
         />
       ) : (
@@ -152,20 +150,15 @@ export default function App() {
 
       <Tabs theme={theme} tab={tab} onTab={setTab} />
 
-      {search && !encounter && (
-        <SearchScreen
-          creature={search}
+      {alertFor && !encounter && (
+        <EncounterAlert
+          creature={alertFor}
           theme={theme}
-          bearing={pos ? bearingDegrees(pos, search) : null}
-          distance={distanceTo(search)}
-          onFound={() => {
-            muted.current.add(search.id)
-            setSearch(null)
-            setEncounter(search)
-          }}
-          onClose={() => {
-            muted.current.add(search.id)
-            setSearch(null)
+          distance={distanceTo(alertFor)}
+          onGo={() => startEncounter(alertFor)}
+          onDismiss={() => {
+            muted.current.add(alertFor.id)
+            setAlertFor(null)
           }}
         />
       )}
