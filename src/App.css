@@ -772,3 +772,47 @@
 .enc.day:has(.arena-chili) .enc-bottom { background: linear-gradient(rgba(40,4,2,0), rgba(40,4,2,0.8) 60%); }
 .enc:has(.arena-spacex) .enc-hint { color: #fbf6ea; }
 .enc.day:has(.arena-spacex) .enc-bottom { background: linear-gradient(rgba(5,6,10,0), rgba(5,6,10,0.85) 60%); }
+
+/* =================== Camera search (find it before the encounter) =================== */
+.enc.search { touch-action: none; user-select: none; }
+.search-scan { position: absolute; inset: 0; pointer-events: none; }
+.night .search-scan { background: repeating-linear-gradient(rgba(255,75,75,0.05) 0 2px, transparent 2px 5px), radial-gradient(circle at 50% 54%, transparent 40%, rgba(5,6,10,0.55)); }
+.day .search-scan { background: radial-gradient(circle at 50% 54%, transparent 45%, rgba(43,36,25,0.35)); }
+.search-stage { position: absolute; z-index: 1; width: 0; height: 0; transition: left .12s linear, top .2s ease-out; }
+.search-creature { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); filter: drop-shadow(0 10px 12px rgba(0,0,0,0.3)); }
+.search-creature.lurk { opacity: 0.55; filter: blur(1.5px) drop-shadow(0 10px 12px rgba(0,0,0,0.3)); }
+.search-creature.lurk .art, .search-creature.locking .art { animation: bob 1.6s ease-in-out infinite; }
+.search-creature.locking { opacity: 0.85; }
+.search-creature.noticed { animation: noticed .9s cubic-bezier(.2,1.5,.4,1); }
+@keyframes noticed {
+  0% { transform: translate(-50%, -50%) scale(1, 1); }
+  18% { transform: translate(-50%, -42%) scale(1.15, .82); }
+  45% { transform: translate(-50%, -78%) scale(.92, 1.1); }
+  70% { transform: translate(-50%, -48%) scale(1.08, .94); }
+  100% { transform: translate(-50%, -50%) scale(1, 1); }
+}
+.search-bang { position: absolute; left: 50%; top: -18px; z-index: 1; width: 44px; height: 44px; margin-left: -22px; display: grid; place-items: center; border-radius: 50%; font: 800 30px/1 'Chakra Petch', sans-serif; animation: bang .5s cubic-bezier(.2,1.8,.4,1); }
+.day .search-bang { background: #9a1515; color: #fbf6ea; box-shadow: 0 3px 0 #5e0c0c; }
+.night .search-bang { background: #ff4b4b; color: #0c0e13; box-shadow: 0 0 18px #ff4b4b; }
+@keyframes bang { from { transform: scale(0) rotate(-30deg); } }
+.search-lock { position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border-radius: 50%; border: 3px solid; animation: lock-in linear forwards; pointer-events: none; }
+.day .search-lock { border-color: #9a1515; }
+.night .search-lock { border-color: #ff4b4b; box-shadow: 0 0 14px rgba(255,75,75,0.6); }
+@keyframes lock-in { from { transform: scale(1.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.search-arrow { position: absolute; top: 50%; z-index: 1; margin-top: -40px; font: 700 80px/80px 'Chakra Petch', sans-serif; animation: nudge 1s ease-in-out infinite; pointer-events: none; }
+.search-arrow.right { right: 14px; --nudge: 8px; }
+.search-arrow.left { left: 14px; --nudge: -8px; }
+.day .search-arrow { color: #fbf6ea; text-shadow: 0 2px 8px rgba(43,36,25,0.6); }
+.night .search-arrow { color: #ff4b4b; text-shadow: 0 0 12px #ff4b4b; }
+@keyframes nudge { 50% { transform: translateX(var(--nudge)); } }
+.search-hint { position: absolute; left: 16px; right: 16px; bottom: calc(env(safe-area-inset-bottom) + 34px); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; pointer-events: none; }
+.day .search-hint span:first-child { padding: 6px 14px; background: #fbf6ea; border: 1px solid #c9b994; font: 600 22px 'Caveat', cursive; color: #2b2419; rotate: -1deg; }
+.night .search-hint span:first-child { padding: 8px 12px; background: rgba(12,14,19,0.85); border: 1px solid #ff4b4b; font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: 0.1em; color: #ff8a8a; }
+.search-sub { font-size: 11px; letter-spacing: 0.06em; color: #fbf6ea; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
+.search-ask { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 0 32px; text-align: center; }
+.day .search-ask { background: rgba(251,246,234,0.92); color: #2b2419; font: 17px 'Young Serif', serif; }
+.night .search-ask { background: rgba(12,14,19,0.9); color: #e8e6e1; font: 13px 'IBM Plex Mono', monospace; }
+.search-ask button { height: 50px; padding: 0 28px; border: 0; font-weight: 700; font-size: 16px; }
+.day .search-ask button { background: #9a1515; color: #fbf6ea; box-shadow: 0 3px 0 #5e0c0c; font-family: 'Karla', sans-serif; }
+.night .search-ask button { background: #ff4b4b; color: #0c0e13; font-family: 'Chakra Petch', sans-serif; }
+.alert-unknown .art, .alert-unknown svg { max-width: 52px; max-height: 52px; }

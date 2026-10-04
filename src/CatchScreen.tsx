@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti'
 import { BigRedBall } from './BigRedBall'
 import { CreatureArt } from './CreatureArt'
 import { RARITY_LABEL, RARITY_TAG, type Creature, type Stage } from './data/creatures'
+import { useCamera } from './camera'
 import { formatDistance } from './game'
 import type { Theme } from './theme'
 
@@ -12,7 +13,6 @@ type Phase = 'appear' | 'ready' | 'throw' | 'shake' | 'miss' | 'transform' | 'ca
 const FORCED_MISSES = Number(new URLSearchParams(window.location.search).get('misses') ?? 0)
 /** ?sure=<id> makes the first throw at that creature a guaranteed catch (end-to-end test on a phone). */
 const SURE = new URLSearchParams(window.location.search).get('sure')
-type CamStatus = 'starting' | 'on' | 'off'
 
 type Props = {
   creature: Creature
@@ -22,44 +22,6 @@ type Props = {
   onClose: () => void
   onOpenDex: () => void
   onEscape: () => void
-}
-
-/** Rear camera as a live backdrop. Falls back to a drawn scene if blocked or unavailable. */
-function useCamera(enabled: boolean) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [status, setStatus] = useState<CamStatus>('starting')
-
-  useEffect(() => {
-    if (!enabled) {
-      setStatus('off')
-      return
-    }
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setStatus('off')
-      return
-    }
-    let stream: MediaStream | null = null
-    let cancelled = false
-    setStatus('starting')
-    navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })
-      .then((s) => {
-        if (cancelled) return s.getTracks().forEach((t) => t.stop())
-        stream = s
-        if (videoRef.current) {
-          videoRef.current.srcObject = s
-          videoRef.current.play().catch(() => {})
-        }
-        setStatus('on')
-      })
-      .catch(() => !cancelled && setStatus('off'))
-    return () => {
-      cancelled = true
-      stream?.getTracks().forEach((t) => t.stop())
-    }
-  }, [enabled])
-
-  return { videoRef, status }
 }
 
 export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOpenDex, onEscape }: Props) {
