@@ -68,8 +68,6 @@ Most students walk the same few buildings for four years. Maps tell you how to g
 ---
 
 ## Try it
-[![Play Big Red Dex](https://img.shields.io/badge/Play-Big%20Red%20Dex-B31B1B?style=for-the-badge)](https://bigreddex.vercel.app)
-
 Open **[Big Red Dex](https://bigreddex.vercel.app)** on your phone and allow location access.
 
 To run it locally:
