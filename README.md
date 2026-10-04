@@ -21,7 +21,7 @@ clues and a warmer/colder signal on the map, then catch them with a Big Red ball
 | 002 | SpaceX (Boostling) | Engineering Quad | Rare |
 | 003 | CEC (Pitchling) | eHub Collegetown | Common |
 | 004 | Anthropic (Kiln) | McGraw Tower | Ultra rare |
-| 005 | Capital One (Vaultling) | Day Hall | Common |
+| 005 | Capital One (Vaultling) | Day Hall | Uncommon |
 | 006 | Asian Chili Spot (Chilibao) | Dryden Road | Common |
 
 ## Run it
