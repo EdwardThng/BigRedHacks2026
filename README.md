@@ -17,7 +17,7 @@ Most students walk the same few buildings for four years. Maps tell you how to g
 2. **Get close**
    - Walk into a creature's habitat and an alert pops up, then opens the encounter automatically.
 3. **Catch it**
-   - Face the creature through your **phone camera** in a battle arena themed after its company.
+   - Face the creature in a full-screen **battle arena** themed after its company.
    - **Flick** the Big Red ball to throw. Catches are logged in your **Journal** with where and when.
 
 ---
@@ -33,7 +33,7 @@ Most students walk the same few buildings for four years. Maps tell you how to g
 - **Kiln (Anthropic)** has a six-try, three-state fight: dozing → awake → furious → escaped.
 
 ### Encounters
-- Live rear camera via **getUserMedia**, with sponsor **logo arenas** that react to throws.
+- Full-screen sponsor **logo arenas** that react to throws, misses and catches.
 - Optional **Supabase** sync (anonymous auth, catches, visits); without it, progress stays on the device.
 
 ---
@@ -42,9 +42,9 @@ Most students walk the same few buildings for four years. Maps tell you how to g
 - **GPS is noisy for tight zones**
   - Laptop and indoor fixes are off by 30m or more, but catch rings are 25–35m.
   - **Solution**: count up to 20m of the phone's reported GPS error toward reaching a ring.
-- **No true AR on iPhone Safari**
-  - Web AR can't anchor objects in the world on iOS.
-  - **Solution**: the creature sits over a live camera feed, with a drawn backdrop if the camera is blocked.
+- **Camera AR felt flat**
+  - Web AR can't anchor objects in the world on iPhone Safari. I tried a live camera backdrop and a compass-based camera search, but neither added much to the hunt.
+  - **Solution**: dropped the camera and put the effort into full-screen sponsor arenas, so arriving at a spot leads straight into the battle.
 - **I cut my own 3D view**
   - I built a first-person walk mode (OpenStreetMap buildings, Google 3D Tiles) but the map was clearer and more fun.
   - **Solution**: archived it (`archive/walk/`) and doubled down on the map and encounters.
