@@ -305,8 +305,8 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
 }
 
 /** Sponsor battle arenas: the company's own logo as the battlefield, reacting to the fight. */
-type ArenaKind = 'palantir' | 'anthropic' | 'spacex' | 'capitalone' | 'cec'
-const ARENAS: Record<string, ArenaKind> = { scryvern: 'palantir', kiln: 'anthropic', boostling: 'spacex', vaultling: 'capitalone', pitchling: 'cec' }
+type ArenaKind = 'palantir' | 'anthropic' | 'spacex' | 'capitalone' | 'cec' | 'chili'
+const ARENAS: Record<string, ArenaKind> = { scryvern: 'palantir', kiln: 'anthropic', boostling: 'spacex', vaultling: 'capitalone', pitchling: 'cec', chilibao: 'chili' }
 
 function Arena({ kind, form, fx, solid }: { kind: ArenaKind; form: string; fx: string; solid: boolean }) {
   if (kind === 'spacex') {
@@ -338,13 +338,52 @@ function Arena({ kind, form, fx, solid }: { kind: ArenaKind; form: string; fx: s
     )
   }
   if (kind === 'cec') {
+    // Prism: the club's faceted triangle, echoed in rotating outlines and floating facets.
+    const colors = ['#f3dd7f', '#e9c25a', '#c95971', '#d06872', '#d6a393', '#a8c7a3', '#63b3a1', '#4f9b8f', '#b9c876']
     return (
       <div className={`arena arena-cec ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
-        <div className="arena-screen">
-          <ClubLogo />
+        <svg className="arena-prism" viewBox="-110 -110 220 220">
+          <defs>
+            <linearGradient id="prism-edge" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#f3dd7f" />
+              <stop offset="0.35" stopColor="#c95971" />
+              <stop offset="0.65" stopColor="#d6a393" />
+              <stop offset="1" stopColor="#4f9b8f" />
+            </linearGradient>
+          </defs>
+          <polygon className="prism-a" points="0,-100 87,50 -87,50" />
+          <polygon className="prism-b" points="0,-70 61,35 -61,35" />
+        </svg>
+        <div className="arena-facets">
+          {Array.from({ length: 16 }).map((_, i) => (
+            <span
+              key={i}
+              style={{ left: `${(i * 23) % 100}%`, background: colors[i % colors.length], animationDelay: `${(i * 0.6) % 6}s`, animationDuration: `${6 + (i % 4)}s` }}
+            />
+          ))}
         </div>
-        <div className="arena-spot" />
-        <div className="arena-crowd" />
+        <ClubLogo />
+      </div>
+    )
+  }
+  if (kind === 'chili') {
+    // Asian Chili Spot: no logo, so pure heat. Flames along the bottom, embers, a red-hot glow.
+    return (
+      <div className={`arena arena-chili ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
+        <div className="arena-heat" />
+        <div className="arena-flames">
+          {Array.from({ length: 11 }).map((_, i) => (
+            <span
+              key={i}
+              style={{ left: `${i * 9.5 - 4}%`, height: `${26 + ((i * 37) % 22)}vh`, animationDelay: `${(i * 0.17) % 0.9}s`, animationDuration: `${0.7 + (i % 3) * 0.18}s` }}
+            />
+          ))}
+        </div>
+        <div className="arena-embers">
+          {Array.from({ length: 18 }).map((_, i) => (
+            <span key={i} style={{ left: `${(i * 29) % 100}%`, animationDelay: `${(i * 0.37) % 3}s`, animationDuration: `${2 + (i % 4) * 0.4}s` }} />
+          ))}
+        </div>
       </div>
     )
   }
@@ -376,11 +415,11 @@ function Arena({ kind, form, fx, solid }: { kind: ArenaKind; form: string; fx: s
   )
 }
 
-/** CEC's logo, from public/logos/cec.svg or cec.png once it's added; a typographic placeholder until then. */
+/** CEC's logo badge (public/logos/cec.png); a typographic stand-in if the file is missing. */
 function ClubLogo() {
-  const [src, setSrc] = useState<string | null>('/logos/cec.svg')
-  if (!src) return <span className="arena-cec-text">CEC</span>
-  return <img className="arena-logo" src={src} alt="" onError={() => setSrc(src.endsWith('.svg') ? '/logos/cec.png' : null)} />
+  const [ok, setOk] = useState(true)
+  if (!ok) return <span className="arena-cec-text">CEC</span>
+  return <img className="arena-badge" src="/logos/cec.png" alt="" onError={() => setOk(false)} />
 }
 
 function SignalBars() {

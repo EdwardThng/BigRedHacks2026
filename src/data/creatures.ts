@@ -95,8 +95,8 @@ export const CREATURES: Creature[] = [
     hours: { start: 9, end: 22, label: '9am to 10pm' },
     clue: 'Upstairs on College Ave, where every idea is a startup and every startup has a deck.',
     note: 'tried to pitch me something',
-    lore: 'Pitchling lights up whenever it has an idea, which is constantly. It carries a tiny pitch deck everywhere and will present it to anyone who stands still.',
-    palette: { body: '#ffd96a', belly: '#fff3c4', accent: '#8a6a12' },
+    lore: 'Pitchling is built from dozens of tiny facets, one for every idea it has had. It turns a new colour whenever it gets excited about a startup, which is constantly.',
+    palette: { body: '#f3dd7f', belly: '#fff8e8', accent: '#4f9b8f' },
   },
   {
     id: 'kiln',

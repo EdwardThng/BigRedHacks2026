@@ -99,22 +99,38 @@ const DRAWINGS: Record<string, Draw> = {
     </g>
   ),
 
-  // Cornell Entrepreneurship Club: a lightbulb with a tiny pitch deck.
+  // Cornell Entrepreneurship Club: the club's faceted triangle come to life, face in the hollow.
   pitchling: (f, p) => (
     <g>
-      <circle cx="100" cy="92" r="72" fill={f('#fff2b0')} opacity="0.55" />
-      <circle cx="100" cy="92" r="54" fill={f(p.body)} />
-      <rect x="76" y="132" width="48" height="16" rx="5" fill={f(p.body)} />
-      <rect x="80" y="146" width="40" height="10" rx="3" fill={f('#9aa3ad')} />
-      <rect x="82" y="158" width="36" height="10" rx="3" fill={f('#b6bec7')} />
-      <rect x="90" y="170" width="20" height="9" rx="3" fill={f('#6b7280')} />
-      <ellipse cx="80" cy="70" rx="9" ry="16" fill={f('#ffffff')} opacity="0.5" />
-      {dotFace(f, 92)}
-      <rect x="140" y="104" width="38" height="30" rx="3" fill={f('#ffffff')} stroke={f(p.accent)} strokeWidth="3" />
-      <rect x="148" y="122" width="6" height="6" fill={f(p.accent)} />
-      <rect x="157" y="116" width="6" height="12" fill={f(p.accent)} />
-      <rect x="166" y="110" width="6" height="18" fill={f('#e5372e')} />
-      <path d="M150 52 L153 60 L161 63 L153 66 L150 74 L147 66 L139 63 L147 60Z" fill={f(p.accent)} />
+      <circle cx="100" cy="104" r="80" fill={f('#fff2b0')} opacity="0.35" />
+      <ellipse cx="66" cy="170" rx="12" ry="7" fill={f('#d06872')} />
+      <ellipse cx="134" cy="170" rx="12" ry="7" fill={f('#4f9b8f')} />
+      <path d="M100.0 22.0 74.0 69.3 100.0 80.0Z" fill={f('#f3dd7f')} stroke={f('#f3dd7f')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M74.0 69.3 88.0 100.7 100.0 80.0Z" fill={f('#e9c25a')} stroke={f('#e9c25a')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M74.0 69.3 48.0 116.7 88.0 100.7Z" fill={f('#d9a95a')} stroke={f('#d9a95a')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M48.0 116.7 76.0 121.3 88.0 100.7Z" fill={f('#c09774')} stroke={f('#c09774')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M48.0 116.7 22.0 164.0 76.0 121.3Z" fill={f('#c95971')} stroke={f('#c95971')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M22.0 164.0 64.0 142.0 76.0 121.3Z" fill={f('#b54559')} stroke={f('#b54559')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M22.0 164.0 74.0 164.0 64.0 142.0Z" fill={f('#d06872')} stroke={f('#d06872')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M74.0 164.0 88.0 142.0 64.0 142.0Z" fill={f('#cb7a81')} stroke={f('#cb7a81')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M74.0 164.0 126.0 164.0 88.0 142.0Z" fill={f('#d6a393')} stroke={f('#d6a393')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M126.0 164.0 112.0 142.0 88.0 142.0Z" fill={f('#d4c1a4')} stroke={f('#d4c1a4')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M126.0 164.0 178.0 164.0 112.0 142.0Z" fill={f('#a8c7a3')} stroke={f('#a8c7a3')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M178.0 164.0 136.0 142.0 112.0 142.0Z" fill={f('#8fbf9c')} stroke={f('#8fbf9c')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M178.0 164.0 152.0 116.7 136.0 142.0Z" fill={f('#4f9b8f')} stroke={f('#4f9b8f')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M152.0 116.7 124.0 121.3 136.0 142.0Z" fill={f('#539e90')} stroke={f('#539e90')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M152.0 116.7 126.0 69.3 124.0 121.3Z" fill={f('#63b3a1')} stroke={f('#63b3a1')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M126.0 69.3 112.0 100.7 124.0 121.3Z" fill={f('#6cb6a1')} stroke={f('#6cb6a1')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M126.0 69.3 100.0 22.0 112.0 100.7Z" fill={f('#b9c876')} stroke={f('#b9c876')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M100.0 22.0 100.0 80.0 112.0 100.7Z" fill={f('#d6d07a')} stroke={f('#d6d07a')} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M100 80 L64 142 L136 142Z" fill={f(p.belly)} stroke={f(p.belly)} strokeWidth="4" strokeLinejoin="round" />
+      <circle cx="91" cy="118" r="4.5" fill={f(INK)} />
+      <circle cx="109" cy="118" r="4.5" fill={f(INK)} />
+      <ellipse cx="83" cy="128" rx="5" ry="3" fill={f('#ff8f8f')} opacity="0.6" />
+      <ellipse cx="117" cy="128" rx="5" ry="3" fill={f('#ff8f8f')} opacity="0.6" />
+      <path d="M95 127 Q100 132 105 127" stroke={f(INK)} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      <path d="M160 34 L163 43 L172 46 L163 49 L160 58 L157 49 L148 46 L157 43Z" fill={f('#e9c25a')} />
+      <path d="M38 60 L40 66 L46 68 L40 70 L38 76 L36 70 L30 68 L36 66Z" fill={f('#63b3a1')} />
     </g>
   ),
 

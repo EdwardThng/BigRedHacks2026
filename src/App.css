@@ -740,16 +740,35 @@
 .enc.night:has(.arena-capitalone) .enc-hint { color: #004977; }
 .enc.night:has(.arena-capitalone) .enc-bottom { background: linear-gradient(rgba(214,226,240,0), #d6e2f0 55%); }
 
-/* CEC: Demo Day stage, spotlight on the founder. */
-.arena-cec { background: rgba(14,12,10,0.9); }
-.arena-cec.solid { background: #0e0c0a; }
-.arena-screen { position: absolute; left: 8%; right: 8%; top: 18%; height: 26%; display: grid; place-items: center; background: #f6f1e4; border: 3px solid #2b2419; box-shadow: 0 0 40px rgba(255,214,106,0.25); }
-.arena-screen .arena-logo { position: static; transform: none; max-width: 80%; max-height: 80%; opacity: 1; }
-.arena-cec-text { font: 400 64px 'Young Serif', Georgia, serif; letter-spacing: 0.08em; color: #2b2419; }
-.arena-spot { position: absolute; left: 50%; top: 30%; width: 120vw; height: 80vh; margin-left: -60vw; background: radial-gradient(ellipse at 50% 100%, rgba(255,222,140,0.55), rgba(255,222,140,0) 60%); clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); }
-.arena-crowd { position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
-  background: radial-gradient(circle at 8% 100%, #000 18px, transparent 19px), radial-gradient(circle at 22% 100%, #000 22px, transparent 23px), radial-gradient(circle at 38% 100%, #000 19px, transparent 20px), radial-gradient(circle at 62% 100%, #000 21px, transparent 22px), radial-gradient(circle at 78% 100%, #000 18px, transparent 19px), radial-gradient(circle at 93% 100%, #000 22px, transparent 23px); }
-.arena-cec.flare .arena-spot { filter: brightness(1.5); }
-.arena-cec.win .arena-screen { box-shadow: 0 0 60px rgba(255,214,106,0.7); }
-.enc:has(.arena-cec) .enc-hint, .enc:has(.arena-spacex) .enc-hint { color: #fbf6ea; }
-.enc.day:has(.arena-cec) .enc-bottom, .enc.day:has(.arena-spacex) .enc-bottom { background: linear-gradient(rgba(5,6,10,0), rgba(5,6,10,0.85) 60%); }
+/* CEC: Prism, built from the club's faceted triangle. */
+.arena-cec { background: radial-gradient(circle at 50% 45%, rgba(255,251,240,0.9), rgba(246,226,214,0.92) 75%); }
+.arena-cec.solid { background: radial-gradient(circle at 50% 45%, #fffbf0, #f6e2d6 75%); }
+.arena-prism { position: absolute; left: 50%; top: 48%; width: 120vmin; height: 120vmin; margin: -60vmin 0 0 -60vmin; overflow: visible; }
+.arena-prism polygon { fill: none; stroke: url(#prism-edge); stroke-linejoin: round; transform-origin: 0 0; }
+.prism-a { stroke-width: 7; opacity: 0.45; animation: prism-spin 24s linear infinite; }
+.prism-b { stroke-width: 4; opacity: 0.6; animation: prism-spin 16s linear infinite reverse; }
+@keyframes prism-spin { to { transform: rotate(360deg); } }
+.arena-cec.flare .prism-a, .arena-cec.flare .prism-b { animation-duration: 2s; opacity: 0.85; }
+.arena-cec.win .arena-prism { transform: scale(1.15); transition: transform .5s; }
+.arena-facets span { position: absolute; bottom: -20px; width: 18px; height: 16px; clip-path: polygon(50% 0, 100% 100%, 0 100%); opacity: 0.75; animation: facet-rise linear infinite; }
+@keyframes facet-rise { from { transform: translateY(0) rotate(0); } to { transform: translateY(-110vh) rotate(540deg); opacity: 0.2; } }
+.arena-badge { position: absolute; left: 50%; top: 20%; width: 64px; transform: translateX(-50%) rotate(-4deg); padding: 8px; background: #fff; border-radius: 14px; box-shadow: 0 6px 16px rgba(60,40,10,0.18); }
+.arena-cec-text { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); font: 400 44px 'Young Serif', Georgia, serif; letter-spacing: 0.08em; color: #2b2419; }
+.enc.night:has(.arena-cec) .enc-hint { color: #4f9b8f; }
+.enc.night:has(.arena-cec) .enc-bottom { background: linear-gradient(rgba(246,226,214,0), #f6e2d6 55%); }
+
+/* Asian Chili Spot: flames, embers and a red-hot glow. */
+.arena-chili { background: radial-gradient(ellipse at 50% 100%, rgba(255,90,30,0.9), rgba(140,12,6,0.93) 45%, rgba(40,4,2,0.96) 80%); }
+.arena-chili.solid { background: radial-gradient(ellipse at 50% 100%, #ff5a1e, #8c0c06 45%, #280402 80%); }
+.arena-heat { position: absolute; left: 50%; top: 56%; width: 340px; height: 340px; margin: -170px 0 0 -170px; border-radius: 50%; background: radial-gradient(circle, rgba(255,170,60,0.45), rgba(255,60,20,0) 65%); animation: heat-pulse 1.4s ease-in-out infinite; }
+@keyframes heat-pulse { 50% { transform: scale(1.12); opacity: 0.8; } }
+.arena-flames span { position: absolute; bottom: -4vh; width: 22vw; transform-origin: 50% 100%; border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%; background: linear-gradient(to top, #ffe36b 0%, #ffae2b 25%, #ff5a1e 55%, rgba(200,20,10,0) 100%); filter: blur(2px); mix-blend-mode: screen; animation: flicker ease-in-out infinite alternate; }
+@keyframes flicker { from { transform: scaleY(0.85) scaleX(1) skewX(-3deg); } to { transform: scaleY(1.12) scaleX(0.92) skewX(4deg); } }
+.arena-chili.flare .arena-flames span { animation-duration: 0.25s !important; height: 52vh !important; transition: height .2s; }
+.arena-chili.flare .arena-heat { transform: scale(1.4); }
+.arena-chili.shudder .arena-flames span { filter: blur(2px) brightness(1.4); }
+.arena-chili .arena-embers span { background: #ffd36b; box-shadow: 0 0 8px #ff8a3c; }
+.enc:has(.arena-chili) .enc-hint { color: #fff1dc; }
+.enc.day:has(.arena-chili) .enc-bottom { background: linear-gradient(rgba(40,4,2,0), rgba(40,4,2,0.8) 60%); }
+.enc:has(.arena-spacex) .enc-hint { color: #fbf6ea; }
+.enc.day:has(.arena-spacex) .enc-bottom { background: linear-gradient(rgba(5,6,10,0), rgba(5,6,10,0.85) 60%); }
