@@ -68,10 +68,12 @@ Most students walk the same few buildings for four years. Maps tell you how to g
 ---
 
 ## Try it
+Play it on your phone at **https://bigreddex.vercel.app**.
+
+To run it locally:
 ```bash
 npm install && npm run dev
 ```
-Open `localhost:5173/?demo`. Phones need an HTTPS deploy for GPS.
 
 ## Demo video
 [Big Red Hacks 2026 demo](https://youtu.be/hqPBTUIEI4s)
