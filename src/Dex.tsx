@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { CreatureArt } from './CreatureArt'
-import { CREATURES, RARITY_LABEL, type Creature } from './data/creatures'
+import { CREATURES, RARITY_LABEL, RARITY_TAG, type Creature } from './data/creatures'
 import type { Theme } from './theme'
 
 type Props = {
@@ -84,7 +84,7 @@ export function Dex({ theme, caught, active, highlight, onReset }: Props) {
                 <span className="jcard-name">{got ? c.brand : 'Unknown'}</span>
                 {got && <span className="jcard-species">{c.name}</span>}
                 <span className="jcard-note">{got ? `${c.spot}, ${timeOf(got)}.` : `${c.spot}. ${c.hours.label}.`}</span>
-                {c.rarity !== 'common' && !got && <span className="jcard-rare">{c.rarity === 'ultra' ? 'ultra rare!!' : 'rare!'}</span>}
+                {RARITY_TAG[c.rarity] && !got && <span className="jcard-rare">{RARITY_TAG[c.rarity]}</span>}
                 {highlight === c.id && <span className="jcard-new">new!</span>}
               </button>
             )

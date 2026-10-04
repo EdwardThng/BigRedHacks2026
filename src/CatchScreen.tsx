@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import confetti from 'canvas-confetti'
 import { BigRedBall } from './BigRedBall'
 import { CreatureArt } from './CreatureArt'
-import { RARITY_LABEL, type Creature, type Stage } from './data/creatures'
+import { RARITY_LABEL, RARITY_TAG, type Creature, type Stage } from './data/creatures'
 import { formatDistance } from './game'
 import type { Theme } from './theme'
 
@@ -172,7 +172,7 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
           <span className="enc-title">{header.title}</span>
           <span className="enc-sub">{header.sub}</span>
         </div>
-        {night ? <SignalBars /> : creature.rarity !== 'common' && <span className="enc-rare">{creature.rarity === 'ultra' ? 'ultra rare!!' : 'rare!'}</span>}
+        {night ? <SignalBars /> : RARITY_TAG[creature.rarity] && <span className="enc-rare">{RARITY_TAG[creature.rarity]}</span>}
       </header>
 
       {staged && !won && phase !== 'gone' && (
@@ -305,9 +305,49 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
 }
 
 /** Sponsor battle arenas: the company's own logo as the battlefield, reacting to the fight. */
-const ARENAS: Record<string, 'palantir' | 'anthropic'> = { scryvern: 'palantir', kiln: 'anthropic' }
+type ArenaKind = 'palantir' | 'anthropic' | 'spacex' | 'capitalone' | 'cec'
+const ARENAS: Record<string, ArenaKind> = { scryvern: 'palantir', kiln: 'anthropic', boostling: 'spacex', vaultling: 'capitalone', pitchling: 'cec' }
 
-function Arena({ kind, form, fx, solid }: { kind: 'palantir' | 'anthropic'; form: string; fx: string; solid: boolean }) {
+function Arena({ kind, form, fx, solid }: { kind: ArenaKind; form: string; fx: string; solid: boolean }) {
+  if (kind === 'spacex') {
+    return (
+      <div className={`arena arena-spacex ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
+        <div className="arena-stars" />
+        <div className="arena-earth" />
+        <div className="arena-orbit" />
+        <img className="arena-logo" src="/logos/spacex-x.svg" alt="" />
+        <img className="arena-word" src="/logos/spacex.svg" alt="" />
+      </div>
+    )
+  }
+  if (kind === 'capitalone') {
+    return (
+      <div className={`arena arena-capitalone ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
+        <div className="arena-vault">
+          <span />
+          <span />
+          <span />
+        </div>
+        <img className="arena-logo" src="/logos/capitalone.svg" alt="" />
+        <div className="arena-coins">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <span key={i} style={{ left: `${(i * 41) % 100}%`, animationDelay: `${(i * 0.7) % 5}s`, animationDuration: `${4 + (i % 3)}s` }} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  if (kind === 'cec') {
+    return (
+      <div className={`arena arena-cec ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
+        <div className="arena-screen">
+          <ClubLogo />
+        </div>
+        <div className="arena-spot" />
+        <div className="arena-crowd" />
+      </div>
+    )
+  }
   if (kind === 'palantir') {
     return (
       <div className={`arena arena-palantir ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
@@ -334,6 +374,13 @@ function Arena({ kind, form, fx, solid }: { kind: 'palantir' | 'anthropic'; form
       )}
     </div>
   )
+}
+
+/** CEC's logo, from public/logos/cec.svg or cec.png once it's added; a typographic placeholder until then. */
+function ClubLogo() {
+  const [src, setSrc] = useState<string | null>('/logos/cec.svg')
+  if (!src) return <span className="arena-cec-text">CEC</span>
+  return <img className="arena-logo" src={src} alt="" onError={() => setSrc(src.endsWith('.svg') ? '/logos/cec.png' : null)} />
 }
 
 function SignalBars() {

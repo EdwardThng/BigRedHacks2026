@@ -18,7 +18,7 @@ export function EncounterAlert({ creature, theme, distance, onGo, onDismiss }: P
   }, [creature.id])
 
   const near = distance != null ? formatDistance(distance) : null
-  const rarity = creature.rarity === 'common' ? 'A creature' : `A ${RARITY_LABEL[creature.rarity].toLowerCase()} creature`
+  const rarity = creature.rarity === 'common' ? 'A creature' : `${/^[aeiou]/i.test(RARITY_LABEL[creature.rarity]) ? 'An' : 'A'} ${RARITY_LABEL[creature.rarity].toLowerCase()} creature`
 
   if (theme === 'night') {
     return (

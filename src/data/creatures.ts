@@ -1,6 +1,6 @@
 import type { Form } from '../CreatureArt'
 
-export type Rarity = 'common' | 'rare' | 'ultra'
+export type Rarity = 'common' | 'uncommon' | 'rare' | 'ultra'
 
 /** One phase of a multi-try encounter: which form it shows, how many throws it lasts, and the catch chance. */
 export type Stage = { form: Form; name: string; tries: number; catchRate: number; tell: string }
@@ -34,8 +34,10 @@ export type Creature = {
 }
 
 /** Chance a creature is out during each 20-minute slot of its window. */
-export const SPAWN_CHANCE: Record<Rarity, number> = { common: 1, rare: 0.35, ultra: 0.12 }
-export const RARITY_LABEL: Record<Rarity, string> = { common: 'Common', rare: 'Rare', ultra: 'Ultra rare' }
+export const SPAWN_CHANCE: Record<Rarity, number> = { common: 1, uncommon: 0.6, rare: 0.35, ultra: 0.12 }
+export const RARITY_LABEL: Record<Rarity, string> = { common: 'Common', uncommon: 'Uncommon', rare: 'Rare', ultra: 'Ultra rare' }
+/** Handwritten tag for the day journal; empty for common creatures. */
+export const RARITY_TAG: Record<Rarity, string> = { common: '', uncommon: 'uncommon', rare: 'rare!', ultra: 'ultra rare!!' }
 
 // Coordinates from OpenStreetMap. eHub is the Student Agencies Building (409 College Ave).
 export const CREATURES: Creature[] = [
@@ -128,7 +130,7 @@ export const CREATURES: Creature[] = [
     name: 'Vaultling',
     type: 'Finance',
     inspiredBy: 'Capital One',
-    rarity: 'common',
+    rarity: 'uncommon',
     spot: 'Day Hall',
     lat: 42.44718,
     lng: -76.48311,

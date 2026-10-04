@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Circle, Polyline, useMap, useMapEvents
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { CreatureArt } from './CreatureArt'
-import { CREATURES, RARITY_LABEL, type Creature } from './data/creatures'
+import { CREATURES, RARITY_LABEL, RARITY_TAG, type Creature } from './data/creatures'
 import { distanceMeters, formatDistance, heat, type GeoStatus, type LatLng } from './game'
 import type { Theme } from './theme'
 
@@ -138,7 +138,7 @@ function JournalZone({ creature: c, caught, active, selected, inside, onSelect }
       ? `<div class="jz-portrait">${renderToStaticMarkup(<CreatureArt creature={c} size={40} vectorOnly />)}</div>`
       : `<div class="jz-stamp">?</div>`
     const note = caught ? '' : active ? c.note : `not out now · ${c.hours.label}`
-    const rare = c.rarity === 'common' || caught ? '' : `<div class="jz-rare">${c.rarity === 'ultra' ? 'ultra rare!!' : 'rare!'}</div>`
+    const rare = !RARITY_TAG[c.rarity] || caught ? '' : `<div class="jz-rare">${RARITY_TAG[c.rarity]}</div>`
     return L.divIcon({
       className: '',
       html: `<div class="jz ${caught ? 'caught' : ''} ${active ? '' : 'asleep'} ${selected ? 'selected' : ''} ${inside ? 'inside' : ''}" style="--ink:${ink}">

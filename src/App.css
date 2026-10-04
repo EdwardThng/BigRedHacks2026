@@ -710,3 +710,46 @@
 .enc.day:has(.arena-palantir) .enc-bottom, .enc.day:has(.arena-anthropic.form-furious) .enc-bottom { background: linear-gradient(rgba(5,6,10,0), rgba(5,6,10,0.85) 60%); }
 /* Backlight so the dark dragon reads against the dark arena. */
 .arena-palantir::after { content: ''; position: absolute; left: 50%; top: 58%; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; background: radial-gradient(circle, rgba(127,227,255,0.32), rgba(127,227,255,0) 65%); }
+
+/* SpaceX: deep space, Earth's limb, the X-and-swoosh as the battlefield. */
+.arena-spacex { background: radial-gradient(ellipse at 50% 110%, rgba(30,70,140,0.75), rgba(4,7,18,0.92) 60%); }
+.arena-spacex.solid { background: radial-gradient(ellipse at 50% 110%, #1e468c, #04070f 60%); }
+.arena-stars { position: absolute; inset: 0; opacity: 0.85;
+  background-image: radial-gradient(1px 1px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 72% 12%, #fff, transparent), radial-gradient(1.5px 1.5px at 40% 30%, #fff, transparent), radial-gradient(1px 1px at 86% 40%, #fff, transparent), radial-gradient(1px 1px at 22% 52%, #fff, transparent), radial-gradient(1.5px 1.5px at 60% 8%, #fff, transparent), radial-gradient(1px 1px at 92% 66%, #fff, transparent), radial-gradient(1px 1px at 6% 72%, #fff, transparent), radial-gradient(1px 1px at 50% 44%, #fff, transparent);
+  animation: twinkle 3s ease-in-out infinite alternate; }
+@keyframes twinkle { to { opacity: 0.5; } }
+.arena-earth { position: absolute; left: -30%; right: -30%; bottom: -78vh; height: 100vh; border-radius: 50%; background: radial-gradient(circle at 50% 0%, #2f6fd6, #0a2350 40%, #05102a 70%); box-shadow: 0 -10px 40px rgba(90,160,255,0.55), inset 0 8px 20px rgba(160,210,255,0.45); }
+.arena-orbit { position: absolute; left: 50%; top: 44%; width: 120vmin; height: 46vmin; margin: -23vmin 0 0 -60vmin; border-radius: 50%; border-top: 2px solid rgba(200,210,225,0.7); transform: rotate(-14deg); animation: orbit-sweep 5s ease-in-out infinite; }
+@keyframes orbit-sweep { 50% { transform: rotate(-8deg) scale(1.04); opacity: 0.6; } }
+.arena-spacex .arena-logo { width: 78vw; top: 38%; left: 62%; filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(120,180,255,0.6)); opacity: 0.22; }
+.arena-spacex .arena-word { position: absolute; left: 50%; bottom: 25%; transform: translateX(-50%); width: 46vw; filter: brightness(0) invert(1); opacity: 0.5; }
+.arena-spacex.flare .arena-logo { filter: brightness(0) invert(1) drop-shadow(0 0 40px rgba(255,170,90,0.9)); }
+
+/* Capital One: a bright vault, logo in its real colours. */
+.arena-capitalone { background: radial-gradient(circle at 50% 46%, rgba(255,255,255,0.92), rgba(214,226,240,0.94) 70%); }
+.arena-capitalone.solid { background: radial-gradient(circle at 50% 46%, #ffffff, #d6e2f0 70%); }
+.arena-vault { position: absolute; left: 50%; top: 46%; width: 88vmin; height: 88vmin; margin: -44vmin 0 0 -44vmin; transition: transform .6s cubic-bezier(.3,1.5,.5,1); }
+.arena-vault span { position: absolute; inset: 0; border-radius: 50%; border: 3px solid rgba(0,73,119,0.18); }
+.arena-vault span:nth-child(2) { inset: 9%; border-width: 10px; border-color: rgba(0,73,119,0.08); border-style: dashed; }
+.arena-vault span:nth-child(3) { inset: 22%; border-color: rgba(208,48,39,0.22); }
+.arena-capitalone.flare .arena-vault { transform: rotate(40deg); }
+.arena-capitalone.win .arena-vault { transform: rotate(360deg); }
+.arena-capitalone .arena-logo { width: 74vw; top: 30%; opacity: 0.9; }
+.arena-coins span { position: absolute; top: -20px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe59a, #e2b23a 60%, #b8892a); box-shadow: 0 1px 2px rgba(0,0,0,0.2); animation: coin-fall linear infinite; }
+@keyframes coin-fall { from { transform: translateY(0) rotateY(0); } to { transform: translateY(110vh) rotateY(720deg); } }
+.enc.night:has(.arena-capitalone) .enc-hint { color: #004977; }
+.enc.night:has(.arena-capitalone) .enc-bottom { background: linear-gradient(rgba(214,226,240,0), #d6e2f0 55%); }
+
+/* CEC: Demo Day stage, spotlight on the founder. */
+.arena-cec { background: rgba(14,12,10,0.9); }
+.arena-cec.solid { background: #0e0c0a; }
+.arena-screen { position: absolute; left: 8%; right: 8%; top: 18%; height: 26%; display: grid; place-items: center; background: #f6f1e4; border: 3px solid #2b2419; box-shadow: 0 0 40px rgba(255,214,106,0.25); }
+.arena-screen .arena-logo { position: static; transform: none; max-width: 80%; max-height: 80%; opacity: 1; }
+.arena-cec-text { font: 400 64px 'Young Serif', Georgia, serif; letter-spacing: 0.08em; color: #2b2419; }
+.arena-spot { position: absolute; left: 50%; top: 30%; width: 120vw; height: 80vh; margin-left: -60vw; background: radial-gradient(ellipse at 50% 100%, rgba(255,222,140,0.55), rgba(255,222,140,0) 60%); clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); }
+.arena-crowd { position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
+  background: radial-gradient(circle at 8% 100%, #000 18px, transparent 19px), radial-gradient(circle at 22% 100%, #000 22px, transparent 23px), radial-gradient(circle at 38% 100%, #000 19px, transparent 20px), radial-gradient(circle at 62% 100%, #000 21px, transparent 22px), radial-gradient(circle at 78% 100%, #000 18px, transparent 19px), radial-gradient(circle at 93% 100%, #000 22px, transparent 23px); }
+.arena-cec.flare .arena-spot { filter: brightness(1.5); }
+.arena-cec.win .arena-screen { box-shadow: 0 0 60px rgba(255,214,106,0.7); }
+.enc:has(.arena-cec) .enc-hint, .enc:has(.arena-spacex) .enc-hint { color: #fbf6ea; }
+.enc.day:has(.arena-cec) .enc-bottom, .enc.day:has(.arena-spacex) .enc-bottom { background: linear-gradient(rgba(5,6,10,0), rgba(5,6,10,0.85) 60%); }
