@@ -54,7 +54,8 @@ export function Dex({ theme, caught, active, highlight, onReset }: Props) {
                     {num(c)} · {got ? c.type.toUpperCase() : live ? 'ACTIVE NOW' : 'DORMANT'}
                     {c.rarity !== 'common' ? ` · ${RARITY_LABEL[c.rarity].toUpperCase()}` : ''}
                   </span>
-                  <span className="slog-name">{got ? c.name : live ? 'Unknown signal' : 'No signal'}</span>
+                  <span className="slog-name">{got ? c.brand : live ? 'Unknown signal' : 'No signal'}</span>
+                  {got && <span className="slog-sub">{c.name}</span>}
                   <span className="slog-sub">
                     {c.spot} · {got ? `logged ${timeOf(got)}` : c.hours.label}
                   </span>
@@ -80,7 +81,8 @@ export function Dex({ theme, caught, active, highlight, onReset }: Props) {
                 {got && <span className="jcard-tape" />}
                 <span className="jcard-num">NO. {num(c)}</span>
                 <span className="jcard-art">{got ? <CreatureArt creature={c} size={72} /> : '?'}</span>
-                <span className="jcard-name">{got ? c.name : 'Unknown'}</span>
+                <span className="jcard-name">{got ? c.brand : 'Unknown'}</span>
+                {got && <span className="jcard-species">{c.name}</span>}
                 <span className="jcard-note">{got ? `${c.spot}, ${timeOf(got)}.` : `${c.spot}. ${c.hours.label}.`}</span>
                 {c.rarity !== 'common' && !got && <span className="jcard-rare">{c.rarity === 'ultra' ? 'ultra rare!!' : 'rare!'}</span>}
                 {highlight === c.id && <span className="jcard-new">new!</span>}
@@ -96,7 +98,7 @@ export function Dex({ theme, caught, active, highlight, onReset }: Props) {
 
       {open && (
         <div className={`entry-backdrop ${theme}`} onClick={() => setOpen(null)}>
-          <div className="entry" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={open.name}>
+          <div className="entry" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={`${open.brand} ${open.name}`}>
             <div className="entry-head">
               <span>{night ? `${num(open)} · ${open.type.toUpperCase()}` : `No. ${num(open)} · ${open.type}`}</span>
               <span className="entry-rarity">{night ? RARITY_LABEL[open.rarity].toUpperCase() : RARITY_LABEL[open.rarity]}</span>
@@ -104,7 +106,8 @@ export function Dex({ theme, caught, active, highlight, onReset }: Props) {
             <div className="entry-art">
               <CreatureArt creature={open} size={170} />
             </div>
-            <h2 className="entry-name">{open.name}</h2>
+            <h2 className="entry-name">{open.brand}</h2>
+            <p className="entry-species">{open.name}</p>
             <p className="entry-where">
               {open.spot} · {open.hours.label}
             </p>

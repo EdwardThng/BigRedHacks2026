@@ -10,8 +10,10 @@ export type Creature = {
   number: number
   name: string
   type: string
-  /** who inspired it: a sponsor, a club or a local spot (shown on the card, never a logo) */
+  /** who inspired it: a sponsor, a club or a local spot */
   inspiredBy: string
+  /** headline name shown everywhere (the company or club); the creature name is the subtitle */
+  brand: string
   rarity: Rarity
   spot: string
   lat: number
@@ -39,6 +41,7 @@ export const RARITY_LABEL: Record<Rarity, string> = { common: 'Common', rare: 'R
 export const CREATURES: Creature[] = [
   {
     id: 'scryvern',
+    brand: 'Palantir',
     number: 1,
     name: 'Scryvern',
     type: 'Oracle',
@@ -57,6 +60,7 @@ export const CREATURES: Creature[] = [
   },
   {
     id: 'boostling',
+    brand: 'SpaceX',
     number: 2,
     name: 'Boostling',
     type: 'Launch',
@@ -75,6 +79,7 @@ export const CREATURES: Creature[] = [
   },
   {
     id: 'pitchling',
+    brand: 'CEC',
     number: 3,
     name: 'Pitchling',
     type: 'Founder',
@@ -93,6 +98,7 @@ export const CREATURES: Creature[] = [
   },
   {
     id: 'kiln',
+    brand: 'Anthropic',
     number: 4,
     name: 'Kiln',
     type: 'Dozing',
@@ -117,6 +123,7 @@ export const CREATURES: Creature[] = [
   },
   {
     id: 'vaultling',
+    brand: 'Capital One',
     number: 5,
     name: 'Vaultling',
     type: 'Finance',
@@ -135,6 +142,7 @@ export const CREATURES: Creature[] = [
   },
   {
     id: 'chilibao',
+    brand: 'Asian Chili Spot',
     number: 6,
     name: 'Chilibao',
     type: 'Spicy',

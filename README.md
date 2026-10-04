@@ -15,14 +15,14 @@ clues and a warmer/colder signal on the map, then catch them with a Big Red ball
   every player.
 - **Journal.** Everything you catch is logged with where and when you found it.
 
-| # | Creature | Inspired by | Spot | Rarity |
-|---|---|---|---|---|
-| 001 | Scryvern | Palantir | Malott Hall | Rare |
-| 002 | Boostling | SpaceX | Engineering Quad | Rare |
-| 003 | Pitchling | Cornell Entrepreneurship Club | eHub Collegetown | Common |
-| 004 | Kiln | Anthropic | McGraw Tower | Ultra rare |
-| 005 | Vaultling | Capital One | Day Hall | Common |
-| 006 | Chilibao | Asian Chili Spot | Dryden Road | Common |
+| # | Name (creature) | Spot | Rarity |
+|---|---|---|---|
+| 001 | Palantir (Scryvern) | Malott Hall | Rare |
+| 002 | SpaceX (Boostling) | Engineering Quad | Rare |
+| 003 | CEC (Pitchling) | eHub Collegetown | Common |
+| 004 | Anthropic (Kiln) | McGraw Tower | Ultra rare |
+| 005 | Capital One (Vaultling) | Day Hall | Common |
+| 006 | Asian Chili Spot (Chilibao) | Dryden Road | Common |
 
 ## Run it
 
@@ -46,5 +46,7 @@ React + TypeScript + Vite, Leaflet with OpenStreetMap tiles, SunCalc for sunrise
 Optional Supabase sync (anonymous auth, catches and habitat visits) when `VITE_SUPABASE_URL`
 and `VITE_SUPABASE_ANON_KEY` are set; see `supabase/schema.sql` and `.env.example`.
 Without them the game keeps progress on the device.
+
+Palantir and Anthropic battles use the companies' logos as the arena (see `public/logos/README.md`); logos are trademarks of their owners.
 
 `archive/walk/` holds an earlier first-person 3D view that was cut; it is not built or shipped.

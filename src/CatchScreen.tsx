@@ -132,11 +132,11 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
   const header = night
     ? {
         title: won ? 'SIGNAL LOGGED' : lost ? 'SIGNAL LOST' : `ENGAGED · ${creature.spot.toUpperCase()}`,
-        sub: won ? creature.name.toUpperCase() : lost ? 'TARGET FLED' : staged ? tryLabel : `UNKNOWN SIGNAL${near ? ` · ${near.toUpperCase()}` : ''} · ${rarity.toUpperCase()}`,
+        sub: won ? `${creature.brand} · ${creature.name}`.toUpperCase() : lost ? 'TARGET FLED' : staged ? tryLabel : `UNKNOWN SIGNAL${near ? ` · ${near.toUpperCase()}` : ''} · ${rarity.toUpperCase()}`,
       }
     : {
         title: `Field note ${String(creature.number).padStart(3, '0')} · ${creature.spot}`,
-        sub: won ? `Gotcha! It's ${creature.name}.` : lost ? 'It got away.' : staged ? tryLabel : `A wild creature${near ? `, ${near} ahead` : ''}`,
+        sub: won ? `Gotcha! It's ${creature.brand}'s ${creature.name}.` : lost ? 'It got away.' : staged ? tryLabel : `A wild creature${near ? `, ${near} ahead` : ''}`,
       }
 
   // Center banner for the big moments.
@@ -151,14 +151,18 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
           ? night ? 'TARGET ESCAPED' : 'It flew off!'
           : null
   const mood = staged ? `form-${stage.form}` : ''
+  const arena = ARENAS[creature.id]
+  const arenaFx =
+    phase === 'throw' || phase === 'shake' || phase === 'transform' ? 'flare' : phase === 'miss' ? 'shudder' : phase === 'caught' || phase === 'card' ? 'win' : ''
   const creatureClass =
     phase === 'appear' ? 'enter' : phase === 'throw' ? 'absorb' : phase === 'miss' ? 'burst' : phase === 'transform' ? 'morph' : phase === 'escape' ? 'flee' : 'idle'
 
   return (
     <div className={`enc ${theme}`}>
       <video ref={videoRef} className={`enc-video ${status === 'on' ? 'live' : ''}`} playsInline muted autoPlay aria-hidden="true" />
-      {status !== 'on' && <div className="enc-backdrop" aria-hidden="true" />}
-      {night && <div className="enc-night-tint" aria-hidden="true" />}
+      {status !== 'on' && !arena && <div className="enc-backdrop" aria-hidden="true" />}
+      {night && !arena && <div className="enc-night-tint" aria-hidden="true" />}
+      {arena && <Arena kind={arena} form={staged ? stage.form : 'dozing'} fx={arenaFx} solid={status !== 'on'} />}
 
       <header className="enc-head">
         <button className="enc-x" onClick={onClose} aria-label="Run away">
@@ -248,7 +252,7 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
 
       {phase === 'card' && (
         <div className={`entry-backdrop ${theme}`}>
-          <div className="entry" role="dialog" aria-label={`${creature.name} logged`}>
+          <div className="entry" role="dialog" aria-label={`${creature.brand} ${creature.name} logged`}>
             <div className="entry-head">
               <span>{night ? `${String(creature.number).padStart(3, '0')} · ${creature.type.toUpperCase()}` : `No. ${String(creature.number).padStart(3, '0')} · ${creature.type}`}</span>
               <span className="entry-rarity">{night ? rarity.toUpperCase() : rarity}</span>
@@ -256,7 +260,8 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
             <div className="entry-art">
               <CreatureArt creature={creature} size={170} />
             </div>
-            <h2 className="entry-name">{creature.name}</h2>
+            <h2 className="entry-name">{creature.brand}</h2>
+            <p className="entry-species">{creature.name}</p>
             <p className="entry-where">
               {creature.spot} · {creature.hours.label}
             </p>
@@ -293,6 +298,38 @@ export function CatchScreen({ creature, theme, distance, onCaught, onClose, onOp
               </button>
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** Sponsor battle arenas: the company's own logo as the battlefield, reacting to the fight. */
+const ARENAS: Record<string, 'palantir' | 'anthropic'> = { scryvern: 'palantir', kiln: 'anthropic' }
+
+function Arena({ kind, form, fx, solid }: { kind: 'palantir' | 'anthropic'; form: string; fx: string; solid: boolean }) {
+  if (kind === 'palantir') {
+    return (
+      <div className={`arena arena-palantir ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
+        <div className="arena-rings">
+          <span />
+          <span />
+          <span />
+        </div>
+        <img className="arena-logo" src="/logos/palantir-symbol.svg" alt="" />
+        <img className="arena-word" src="/logos/palantir.svg" alt="" />
+      </div>
+    )
+  }
+  return (
+    <div className={`arena arena-anthropic form-${form} ${fx} ${solid ? 'solid' : ''}`} aria-hidden="true">
+      <div className="arena-tile" />
+      <img className="arena-logo" src="/logos/anthropic.svg" alt="" />
+      {form === 'furious' && (
+        <div className="arena-embers">
+          {Array.from({ length: 14 }).map((_, i) => (
+            <span key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i * 0.43) % 3}s`, animationDuration: `${2.4 + (i % 4) * 0.5}s` }} />
+          ))}
         </div>
       )}
     </div>

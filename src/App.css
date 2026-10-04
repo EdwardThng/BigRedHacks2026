@@ -656,3 +656,57 @@
 .entry.escaped .entry-art { opacity: 0.6; }
 
 .enc:has(.enc-tries) .enc-cam { top: calc(env(safe-area-inset-top) + 150px); }
+.jcard-species { font: 600 15px 'Caveat', cursive; color: #6b5d43; margin-top: -4px; }
+.entry-species { margin: -6px 0 0; text-align: center; font-size: 13px; }
+.day .entry-species { font: 600 18px 'Caveat', cursive; color: #6b5d43; }
+.night .entry-species { color: #a8a49b; letter-spacing: 0.08em; text-transform: uppercase; font-size: 11px; }
+
+/* =================== Sponsor arenas =================== */
+.arena { position: absolute; inset: 0; pointer-events: none; overflow: hidden; transition: background .8s ease; }
+.arena-logo { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); transition: opacity .3s, transform .3s, filter .3s; }
+
+/* Palantir: the seeing-stone symbol as a dark, rippling battlefield. */
+.arena-palantir { background: radial-gradient(circle at 50% 50%, rgba(22,26,42,0.6), rgba(5,6,10,0.9) 72%); }
+.arena-palantir.solid { background: radial-gradient(circle at 50% 50%, #161a2a, #05060a 72%); }
+.arena-palantir .arena-logo { height: 64vh; filter: invert(1) drop-shadow(0 0 28px rgba(127,227,255,0.55)); opacity: 0.2; animation: logo-breathe 4s ease-in-out infinite; }
+.arena-palantir .arena-word { position: absolute; left: 50%; bottom: 23%; transform: translateX(-50%); height: 22px; filter: invert(1); opacity: 0.35; }
+.arena-rings span { position: absolute; left: 50%; top: 46%; width: 70vmin; height: 70vmin; margin: -35vmin 0 0 -35vmin; border-radius: 50%; border: 1px solid rgba(127,227,255,0.35); animation: ripple 3.6s ease-out infinite; }
+.arena-rings span:nth-child(2) { animation-delay: 1.2s; }
+.arena-rings span:nth-child(3) { animation-delay: 2.4s; }
+@keyframes ripple { from { transform: scale(0.25); opacity: 0.9; } to { transform: scale(1.9); opacity: 0; } }
+@keyframes logo-breathe { 50% { opacity: 0.3; } }
+
+/* Anthropic: the wordmark as a kiln that heats up with Kiln's state. */
+.arena-anthropic.form-dozing { background: rgba(240,238,230,0.88); }
+.arena-anthropic.form-awake { background: radial-gradient(circle at 50% 55%, rgba(246,214,170,0.92), rgba(222,170,120,0.92) 80%); }
+.arena-anthropic.form-furious { background: radial-gradient(circle at 50% 55%, rgba(120,40,22,0.92), rgba(20,20,19,0.95) 70%); }
+.arena-anthropic.solid.form-dozing { background: #f0eee6; }
+.arena-anthropic.solid.form-awake { background: radial-gradient(circle at 50% 55%, #f6d6aa, #deaa78 80%); }
+.arena-anthropic.solid.form-furious { background: radial-gradient(circle at 50% 55%, #782816, #141413 70%); }
+.arena-tile {
+  position: absolute; inset: -40%; transform: rotate(-14deg);
+  background-image: url('/logos/anthropic-tile.svg'); background-size: 220px auto; background-repeat: repeat; background-position: 0 0;
+  opacity: 0.06; animation: tile-drift 40s linear infinite;
+}
+.form-awake .arena-tile { opacity: 0.1; animation-duration: 18s; }
+.form-furious .arena-tile { opacity: 0.12; filter: invert(1); animation-duration: 7s; }
+@keyframes tile-drift { to { background-position: 340px 0; } }
+.arena-anthropic .arena-logo { width: 88vw; top: 26%; opacity: 0.14; }
+.form-awake .arena-logo { opacity: 0.22; filter: drop-shadow(0 0 18px rgba(217,119,87,0.45)); }
+.form-furious .arena-logo { opacity: 0.75; filter: invert(1) drop-shadow(0 0 10px #d97757) drop-shadow(0 0 28px #d97757); animation: logo-heat 1.2s ease-in-out infinite; }
+@keyframes logo-heat { 50% { filter: invert(1) drop-shadow(0 0 16px #ff6a3d) drop-shadow(0 0 40px #d97757); } }
+.arena-embers span { position: absolute; bottom: -10px; width: 5px; height: 5px; border-radius: 50%; background: #ff8a4c; box-shadow: 0 0 8px #ff6a3d; animation: ember linear infinite; }
+@keyframes ember { from { transform: translateY(0) translateX(0); opacity: 1; } to { transform: translateY(-90vh) translateX(30px); opacity: 0; } }
+
+/* Arena reactions */
+.arena.flare .arena-logo { opacity: 0.55; transform: translate(-50%, -50%) scale(1.07); }
+.arena-palantir.flare .arena-logo { filter: invert(1) drop-shadow(0 0 40px rgba(127,227,255,0.9)); }
+.arena.shudder { animation: arena-shudder .45s ease; }
+@keyframes arena-shudder { 20% { transform: translate(-8px, 3px); } 40% { transform: translate(7px, -3px); } 60% { transform: translate(-5px, -2px); } 80% { transform: translate(3px, 2px); } }
+.arena.win .arena-logo { opacity: 0.6; transform: translate(-50%, -50%) scale(1.12); }
+
+/* Readable text on the arenas */
+.enc:has(.arena-palantir) .enc-hint, .enc:has(.arena-anthropic.form-furious) .enc-hint { color: #fbf6ea; }
+.enc.day:has(.arena-palantir) .enc-bottom, .enc.day:has(.arena-anthropic.form-furious) .enc-bottom { background: linear-gradient(rgba(5,6,10,0), rgba(5,6,10,0.85) 60%); }
+/* Backlight so the dark dragon reads against the dark arena. */
+.arena-palantir::after { content: ''; position: absolute; left: 50%; top: 58%; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; background: radial-gradient(circle, rgba(127,227,255,0.32), rgba(127,227,255,0) 65%); }

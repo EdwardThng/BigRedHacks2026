@@ -267,7 +267,7 @@ function RadarCard({ target, pos, caught, active, inRange, onEncounter }: { targ
   return (
     <div className="rcard">
       <div className="rcard-row">
-        <span className="rcard-title">{caught ? `Logged · ${target.name}` : active ? `Signal near ${target.spot}` : `No signal · ${target.spot}`}</span>
+        <span className="rcard-title">{caught ? `Logged · ${target.brand}` : active ? `Signal near ${target.spot}` : `No signal · ${target.spot}`}</span>
         <Bars n={active && !caught ? s.bars : 0} />
       </div>
       <p className="rcard-clue">{target.clue}</p>
